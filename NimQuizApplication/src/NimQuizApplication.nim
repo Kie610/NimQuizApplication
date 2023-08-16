@@ -3,9 +3,9 @@ import wNim, slappy, db_connector/db_sqlite
 when isMainModule:
   echo("Hello, World!")
 
-  let db = open("testdatabase.db", "", "", "")
+  let db = open("Data/QUIZ_DATABASE.db", "", "", "")
 
-  db.exec(sql"""CREATE TABLE IF NOT EXISTS my_table (
+  db.exec(sql"""CREATE TABLE IF NOT EXISTS QUIZ_TABLE (
     id    INTEGER PRIMARY KEY,
     name  VARCHAR(50) NOT NULL,
     i     INT(11),
