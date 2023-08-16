@@ -1,2 +1,2 @@
 proc Start*() =
-  echo "Initialize"
+  echo("Initialize")

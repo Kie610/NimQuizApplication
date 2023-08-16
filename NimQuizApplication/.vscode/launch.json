@@ -8,10 +8,10 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "preLaunchTask": "Nimble Build(Debug,GUI)",
+            "preLaunchTask": "Nimble Build(Debug)",
             "program": "${workspaceFolder}/tests/${workspaceFolderBasename}",
             "args": [],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}/tests"
         }
     ]
 }
