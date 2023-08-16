@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "reverseDeps": {
+    "db_connector": {
+      "0.1.0": {
+        "05c335ec678614b973d8a80651971e0719045d14": [
+          {
+            "path": "E:\\DataOkiba\\MyData\\ProgramingFiles\\NimQuizApplication\\NimQuizApplication"
+          }
+        ]
+      }
+    },
+    "winim": {
+      "3.9.2": {
+        "154c271e1d766fca5aea32beecec5645e6d2e114": [
+          {
+            "name": "memlib",
+            "version": "1.3.0",
+            "checksum": "90fb8662a45423370d3c55dc34c0f5449d58779e"
+          },
+          {
+            "name": "wnim",
+            "version": "0.13.3",
+            "checksum": "eba76f28624eb4c74bdda19830fae74d4dbc1ee2"
+          }
+        ]
+      }
+    },
+    "minhook": {
+      "1.0.0": {
+        "a2da03fb64c20b6dba03855addf3e608c4aec62d": [
+          {
+            "name": "memlib",
+            "version": "1.3.0",
+            "checksum": "90fb8662a45423370d3c55dc34c0f5449d58779e"
+          }
+        ]
+      }
+    },
+    "npeg": {
+      "1.2.1": {
+        "c5451eea5d1f656700f04ad4b234d99ab0b78ed7": [
+          {
+            "name": "wnim",
+            "version": "0.13.3",
+            "checksum": "eba76f28624eb4c74bdda19830fae74d4dbc1ee2"
+          }
+        ]
+      }
+    },
+    "memlib": {
+      "1.3.0": {
+        "90fb8662a45423370d3c55dc34c0f5449d58779e": [
+          {
+            "name": "wnim",
+            "version": "0.13.3",
+            "checksum": "eba76f28624eb4c74bdda19830fae74d4dbc1ee2"
+          }
+        ]
+      }
+    },
+    "openal": {
+      "0.1.1": {
+        "8712fdba2c3531ac6e43ba844082d3c62504f822": [
+          {
+            "name": "slappy",
+            "version": "0.3.1",
+            "checksum": "2a29a1cf11b0e7ec40f92499ba8e751ab6a9f87f"
+          }
+        ]
+      }
+    },
+    "vmath": {
+      "2.0.0": {
+        "c90a664f3425d26219e1262ed9a888b859b3127c": [
+          {
+            "name": "slappy",
+            "version": "0.3.1",
+            "checksum": "2a29a1cf11b0e7ec40f92499ba8e751ab6a9f87f"
+          }
+        ]
+      }
+    },
+    "supersnappy": {
+      "2.1.3": {
+        "36a05ee6befe3764ed8e2a6fb5d0882c2fd090f8": [
+          {
+            "name": "slappy",
+            "version": "0.3.1",
+            "checksum": "2a29a1cf11b0e7ec40f92499ba8e751ab6a9f87f"
+          }
+        ]
+      }
+    },
+    "wnim": {
+      "0.13.3": {
+        "eba76f28624eb4c74bdda19830fae74d4dbc1ee2": [
+          {
+            "path": "E:\\DataOkiba\\MyData\\ProgramingFiles\\NimQuizApplication\\NimQuizApplication"
+          }
+        ]
+      }
+    },
+    "slappy": {
+      "0.3.1": {
+        "2a29a1cf11b0e7ec40f92499ba8e751ab6a9f87f": [
+          {
+            "path": "E:\\DataOkiba\\MyData\\ProgramingFiles\\NimQuizApplication\\NimQuizApplication"
+          }
+        ]
+      }
+    }
+  }
+}

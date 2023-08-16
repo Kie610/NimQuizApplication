@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "metaData": {
+    "url": "https://github.com/treeform/openal",
+    "downloadMethod": "git",
+    "vcsRevision": "72c78955be4b3ccf99c9dc6f8708d0e74b37126d",
+    "files": [
+      "\\openal.nim",
+      "\\openal\\alc.nim",
+      "\\openal.nimble"
+    ],
+    "binaries": [],
+    "specialVersions": [
+      "0.1.1"
+    ]
+  }
+}

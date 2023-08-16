@@ -6,5 +6,7 @@ license       = "MIT"
 srcDir        = "src" 
 bin           = @["NimQuizApplication"] 
 # Dependencies 
-requires "nim >= 2.0.0" 
+requires "nim >= 2.0.0"
+requires "wNim"
+requires "slappy" 
 requires "db_connector"

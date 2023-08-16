@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "metaData": {
+    "url": "https://github.com/treeform/slappy",
+    "downloadMethod": "git",
+    "vcsRevision": "43bd685ef7de13ea4536ad2bcd9d4a91e657648e",
+    "files": [
+      "\\slappy\\slappyformat.nim",
+      "\\slappy.nim",
+      "\\slappy\\vorbis.c",
+      "\\slappy.nimble",
+      "\\slappy\\wav.nim",
+      "\\slappy\\vorbis.nim"
+    ],
+    "binaries": [],
+    "specialVersions": [
+      "0.3.1"
+    ]
+  }
+}

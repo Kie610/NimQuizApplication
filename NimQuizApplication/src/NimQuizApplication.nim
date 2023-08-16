@@ -1,4 +1,4 @@
-import db_connector/db_sqlite
+import wNim, slappy, db_connector/db_sqlite
 
 when isMainModule:
   echo("Hello, World!")
@@ -13,3 +13,14 @@ when isMainModule:
   )""")
 
   db.close()
+
+  slappyInit()
+
+  slappyClose()
+
+  let app = App()
+  let frame = Frame(title="Hello World", size=(1600, 900))
+
+  frame.center()
+  frame.show()
+  app.mainLoop()

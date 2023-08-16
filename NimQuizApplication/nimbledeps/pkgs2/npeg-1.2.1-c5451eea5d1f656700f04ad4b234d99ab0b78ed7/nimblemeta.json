@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "metaData": {
+    "url": "https://github.com/zevv/npeg",
+    "downloadMethod": "git",
+    "vcsRevision": "26d62fdc40feb84c6533956dc11d5ee9ea9b6c09",
+    "files": [
+      "\\npeg\\patt.nim",
+      "\\npeg\\lib\\types.nim",
+      "\\npeg\\lib\\rfc3339.nim",
+      "\\npeg\\dot.nim",
+      "\\npeg\\capture.nim",
+      "\\npeg\\parsepatt.nim",
+      "\\npeg\\grammar.nim",
+      "\\npeg\\lib\\utf8.nim",
+      "\\npeg\\lib\\core.nim",
+      "\\npeg\\railroad.nim",
+      "\\npeg.nimble",
+      "\\npeg\\stack.nim",
+      "\\npeg\\common.nim",
+      "\\npeg\\lib\\uri.nim",
+      "\\npeg\\codegen.nim",
+      "\\npeg.nim"
+    ],
+    "binaries": [],
+    "specialVersions": [
+      "1.2.1"
+    ]
+  }
+}

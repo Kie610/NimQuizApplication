@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "metaData": {
+    "url": "https://github.com/khchen/minhook",
+    "downloadMethod": "git",
+    "vcsRevision": "7c0cfdac09e6b02114741318fe3e3284fc1ac334",
+    "files": [
+      "\\minhook\\src\\hde\\table32.h",
+      "\\minhook\\src\\hde\\hde64.c",
+      "\\minhook\\src\\hde\\hde32.c",
+      "\\minhook\\src\\hde\\pstdint.h",
+      "\\minhook\\src\\hde\\hde64.h",
+      "\\minhook.nim",
+      "\\minhook\\src\\hook.c",
+      "\\minhook\\src\\trampoline.h",
+      "\\minhook\\src\\buffer.h",
+      "\\minhook\\include\\MinHook.h",
+      "\\minhook\\src\\buffer.c",
+      "\\minhook\\README.md",
+      "\\minhook\\src\\hde\\table64.h",
+      "\\minhook\\src\\trampoline.c",
+      "\\minhook.nimble",
+      "\\minhook\\src\\hde\\hde32.h",
+      "\\minhook\\AUTHORS.txt",
+      "\\minhook\\LICENSE.txt"
+    ],
+    "binaries": [],
+    "specialVersions": [
+      "1.0.0"
+    ]
+  }
+}
