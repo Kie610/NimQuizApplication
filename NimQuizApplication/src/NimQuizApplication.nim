@@ -2,10 +2,12 @@
 import wNim, slappy, db_connector/db_sqlite
 
 #プログラムファイルのインポート
-import Initialize
+import Initialize, DB_Connection, Graphic
 
 when isMainModule:
   Initialize.Start()
+  DB_Connection.Start()
+  Graphic.Start()
 
   echo("Hello, World!")
 
