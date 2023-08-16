@@ -1,0 +1,117 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Nim Run",
+            "type": "shell",
+            "command": "nim r ${file}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nim Run(GUI)",
+            "type": "shell",
+            "command": "nim r --app:gui ${file}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nim Compile",
+            "type": "shell",
+            "command": "nim compile ${file}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nim Compile(GUI)",
+            "type": "shell",
+            "command": "nim compile --app:gui ${file}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Build",
+            "type": "shell",
+            "command": "nimble build -d:release -d:strip --opt:size ;mv -Force ${workspaceFolder}/${workspaceFolderBasename}.exe ${workspaceFolder}/output",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Build(GUI)",
+            "type": "shell",
+            "command": "nimble build -d:release -d:strip --opt:size --app:gui ;mv -Force ${workspaceFolder}/${workspaceFolderBasename}.exe ${workspaceFolder}/output",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Build(Debug)",
+            "type": "shell",
+            "command": "nimble build -d:debug --debugger:native ;mv -Force ${workspaceFolder}/${workspaceFolderBasename}.exe ${workspaceFolder}/tests",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Build(Debug,GUI)",
+            "type": "shell",
+            "command": "nimble build -d:debug --debugger:native --app:gui ;mv -Force ${workspaceFolder}/${workspaceFolderBasename}.exe ${workspaceFolder}/tests",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Doc",
+            "type": "shell",
+            "command": "nimble doc --project --index:on --outdir:${workspaceFolder}/output/doc ${workspaceFolder}/src/${workspaceFolderBasename}.nim",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Test",
+            "type": "shell",
+            "command": "nimble test",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Nimble Test(Debug)",
+            "type": "shell",
+            "command": "nimble test -d:debug --debugger:native",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+    ]
+}
