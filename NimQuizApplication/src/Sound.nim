@@ -1,9 +1,9 @@
 #ライブラリのインポート
-import slappy
+#import slappy
 
 proc Start*() =
   echo("Sound")
 
-  slappyInit()
-
-  slappyClose()
+#  slappyInit()
+#
+#  slappyClose()
