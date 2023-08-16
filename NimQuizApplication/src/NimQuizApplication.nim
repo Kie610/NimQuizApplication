@@ -1,6 +1,12 @@
+#ライブラリのインポート
 import wNim, slappy, db_connector/db_sqlite
 
+#プログラムファイルのインポート
+import Initialize
+
 when isMainModule:
+  Initialize.Start()
+
   echo("Hello, World!")
 
   let db = open("Data/QUIZ_DATABASE.db", "", "", "")
