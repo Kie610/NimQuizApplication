@@ -9,22 +9,36 @@ when isMainModule:
     app = App(wSystemDpiAware)
     frame = Frame(title=Title, size=(400, 300))
     panel = Panel(frame)
-    
+    listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
+
   var
-    x = newSeq[wRadiobutton]()
+    label = TextCtrl(panel, value="Label", style=wTeReadOnly)
+
+  listbox.wEvent_ContextMenu do ():
+    let menu = Menu()
+    menu.append(wIdClear, "&Clear")
+    listbox.popupMenu(menu)
+
+  frame.wIdClear do ():
+    listbox.clear()
+
+  proc add(self: wListBox, text: string) =
+    self.ensureVisible(self.append(text))
 
   for i in 0..10:
-    x.add(RadioButton(panel, label="Button" & $i))
+    listbox.add "Button" & $i
 
-  var
-    button = RadioButton(panel, label="button")
-    scroll = ScrollBar(panel, style=wSbVertical)
-
-  scroll.setScrollbar(0, 1, 20)
+  proc layout() =
+    panel.autolayout "spacing: 8 \nH:|-[label(40%)]-[listbox]-| \nV:|-[label,listbox]-|"
 
   panel.wEvent_Size do ():
-    panel.autolayout "spacing: 8 \nH:|-[button]-[scroll(30)]-| \nV:|-[button,scroll]-|"
+    layout()
 
+  listbox.wEvent_ListBox do ():
+    label.setValue($(listbox.getSelection()))
+    echo("ListBoxSelected")
+
+  layout()
   frame.center()
   frame.show()
   app.mainLoop()
