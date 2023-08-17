@@ -1,3 +1,4 @@
+#ライブラリのインポート
 import wNim
 
 when isMainModule:
@@ -35,7 +36,7 @@ when isMainModule:
 
   listbox.wEvent_ListBox do ():
     label.setValue($(listbox.getSelection()))
-    echo("ListBoxSelected")
+    echo $(listbox.getSelection())
 
   layout()
   frame.center()
