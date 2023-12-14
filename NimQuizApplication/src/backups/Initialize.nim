@@ -1,0 +1,2 @@
+proc Start*() =
+  echo("Initialize")

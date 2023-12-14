@@ -54,7 +54,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Nimble Build(GUI)",
+            "label": "Nimble Build(ReleaseGUI)",
             "type": "shell",
             "command": "nimble build -d:release -d:strip --opt:size --app:gui ;mv -Force ${workspaceFolder}/${workspaceFolderBasename}.exe ${workspaceFolder}/output",
             "group": {
