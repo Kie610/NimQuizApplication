@@ -1,12 +1,10 @@
-#メインモジュールのインポート
-import ../NimQuizApplication as NQA
-
 #ライブラリのインポート
 import slappy
 
-proc Start*() =
-  echo("Sound")
-
+proc enable_sound*() =
+  echo("Enable Sound")
   slappyInit()
 
+proc disable_sound*() =
+  echo("Disable Sound")
   slappyClose()

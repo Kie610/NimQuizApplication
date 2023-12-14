@@ -1,18 +1,21 @@
-#メインモジュールのインポート
-import ../NimQuizApplication as NQA
-
 #ライブラリのインポート
 import wNim
+
+var
+  app: wApp
+  frame: wFrame
+  panel: wPanel
+  listbox: wListBox
 
 proc Main*() =
   const
     Title = "クイズ出題アプリ"
 
-  let
-    app = App(wSystemDpiAware)
-    frame = Frame(title=Title, size=(400, 300))
-    panel = Panel(frame)
-    listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
+  
+  app = App(wSystemDpiAware)
+  frame = Frame(title=Title, size=(400, 300))
+  panel = Panel(frame)
+  listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
 
   setFont(listbox, Font(20))
 
@@ -45,5 +48,11 @@ proc Main*() =
 
   layout()
   frame.center()
+
+  echo("Show Window")
   frame.show()
   app.mainLoop()
+
+proc window_close*() =
+  echo("Close Window")
+  frame.close()

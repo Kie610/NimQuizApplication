@@ -1,12 +1,14 @@
-#ライブラリのインポート
-import std/os
-
-#メインモジュールのアドレス取得
-let cwd* = os.getCurrentDir()
-
 #モジュールのインポート
-import Modules/[Graphic, Sound, DB_connection]
+import Modules/[Graphic, Sound, DB_Connection]
 
 when isMainModule:
-  DB_connection.Start()
-  Graphic.Main()
+  
+  try:
+    DB_Connection.db_open()
+    Sound.enable_sound()
+    Graphic.Main()
+
+  finally:
+    DB_Connection.db_close()
+    Sound.disable_sound()
+    Graphic.window_close()
