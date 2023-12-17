@@ -12,17 +12,17 @@ var
   app: wApp
   frame: wFrame
   panel: wPanel
-  listbox: wListBox
-  label: wTextCtrl
+  #listbox: wListBox
+  #label: wTextCtrl
 
-  title: wTextCtrl
-  info: wTextCtrl
-  genre: wTextCtrl
+  title: wStaticText
+  info: wStaticText
+  genre: wStaticText
   question: wTextCtrl
-  options1: wButton
-  options2: wButton
-  options3: wButton
-  options4: wButton
+  option1: wButton
+  option2: wButton
+  #options3: wButton
+  #options4: wButton
   prev: wButton
   next: wButton
 
@@ -32,7 +32,7 @@ var
 #################################################
 proc event()
 proc layout()
-proc add(self: wListBox, text: string)
+#proc add(self: wListBox, text: string)
 
 
 #################################################
@@ -44,30 +44,26 @@ proc assignment*() =
   app = App(wSystemDpiAware)
   frame = Frame(title=Title, size=(1280, 720))
   panel = Panel(frame)
-  listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
-  label = TextCtrl(panel, value="Label", style=wTeReadOnly)
+  #listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
+  #label = TextCtrl(panel, value="Label", style=wTeReadOnly)
 
-  title = TextCtrl(panel, value="title", style=wTeReadOnly)
-  info = TextCtrl(panel, value="info", style=wTeReadOnly)
-  genre = TextCtrl(panel, value="genre", style=wTeReadOnly)
+  title = StaticText(panel, label="title", style=(wAlignCenter + wAlignMiddle))
+  info = StaticText(panel, label="info", style=(wAlignCenter + wAlignMiddle))
+  genre = StaticText(panel, label="genre", style=(wAlignCenter + wAlignMiddle))
   question = TextCtrl(panel, value="question", style=wTeReadOnly)
-  options1 = Button(panel, label="options1")
-  options2 = Button(panel, label="options2")
-  options3 = Button(panel, label="options3")
-  options4 = Button(panel, label="options4")
+  option1 = Button(panel, label="option1")
+  option2 = Button(panel, label="option2")
+  #options3 = Button(panel, label="options3")
+  #options4 = Button(panel, label="options4")
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
-
-
-  setFont(listbox, Font(20))
-
 
 #################################################
 #   メインプロシージャ
 #################################################
 proc main*() =
-  for i in 0..10:
-    listbox.add "Button" & $i
+#  for i in 0..10:
+#    listbox.add "Button" & $i
 
   layout()
   event()
@@ -90,22 +86,33 @@ proc window_close*() =
 #   通常処理
 #################################################
 proc layout() =
+  var font_size = (frame.getsize.width + frame.getsize.height)/200
+
   panel.autolayout(screen_layout.get_string("two_choice"))
 
-proc add(self: wListBox, text: string) =
-  self.ensureVisible(self.append(text))
+  setFont(title, Font(font_size))
+  setFont(info, Font(font_size))
+  setFont(genre, Font(font_size))
+  setFont(question, Font(font_size))
+  setFont(option1, Font(font_size))
+  setFont(option2, Font(font_size))
+  setFont(prev, Font(font_size))
+  setFont(next, Font(font_size))
+
+#proc add(self: wListBox, text: string) =
+#  self.ensureVisible(self.append(text))
 
 
 #################################################
 #   イベント処理
 #################################################
 proc event() =
-  listbox.wEvent_ListBox do ():
-    label.setValue($(listbox.getSelection()))
-    echo $(listbox.getSelection())
+#  listbox.wEvent_ListBox do ():
+#    label.setValue($(listbox.getSelection()))
+#    echo $(listbox.getSelection())
 
   panel.wEvent_Size do ():
     layout()
 
-  frame.wIdClear do ():
-    listbox.clear()
+#  frame.wIdClear do ():
+#    listbox.clear()

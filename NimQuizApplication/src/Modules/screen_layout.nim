@@ -11,10 +11,10 @@ proc get_string*(layout_name: string): string =
         H:|-(10%)-[Fooder]-(10%)-|
         V:|-[Header(10%)]-[Question(40%)]-[Options]-[Fooder(10%)]-|
 
-        H:[Header:[title(50%)]-[info]-]
+        H:[Header:-[title(80%)]-[info]-]
 
         H:[Question:[question]]
-        H:[Options:[options1(options2)]-[options2]]
+        H:[Options:[option1(option2)]-[option2]]
 
         H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
 
