@@ -26,6 +26,9 @@ var
   prev: wButton
   next: wButton
 
+  selected_option: uint8
+  correct_answer: uint8
+
 
 #################################################
 #   プロシージャ前方宣言
@@ -47,16 +50,18 @@ proc assignment*() =
   #listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
   #label = TextCtrl(panel, value="Label", style=wTeReadOnly)
 
-  title = StaticText(panel, label="title", style=(wAlignCenter + wAlignMiddle))
-  info = StaticText(panel, label="info", style=(wAlignCenter + wAlignMiddle))
-  genre = StaticText(panel, label="genre", style=(wAlignCenter + wAlignMiddle))
-  question = TextCtrl(panel, value="question", style=wTeReadOnly)
-  option1 = Button(panel, label="option1")
-  option2 = Button(panel, label="option2")
+  title = StaticText(panel, label="スタジオララの名前", style=(wAlignCenter + wAlignMiddle))
+  info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
+  genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
+  question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。\n〇か×か？", style=wTeReadOnly)
+  option1 = Button(panel, label="〇")
+  option2 = Button(panel, label="×")
   #options3 = Button(panel, label="options3")
   #options4 = Button(panel, label="options4")
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
+
+  correct_answer = 2
 
 #################################################
 #   メインプロシージャ
@@ -116,3 +121,25 @@ proc event() =
 
 #  frame.wIdClear do ():
 #    listbox.clear()
+
+  option1.wEvent_Button do ():
+    selected_option = 1
+    echo("Selected Button No." & $selected_option)
+
+  option2.wEvent_Button do ():
+    selected_option = 2
+    echo("Selected Button No." & $selected_option)
+
+  prev.wEvent_Button do ():
+    echo("prev")
+  
+  next.wEvent_Button do ():
+    echo("next")
+
+    if correct_answer == selected_option:
+      echo("correct")
+      setValue(question, value="正解！")
+
+    else:
+      echo("incorrect")
+      setValue(question, value="不正解！")
