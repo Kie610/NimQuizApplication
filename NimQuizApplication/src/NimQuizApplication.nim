@@ -6,9 +6,12 @@ when isMainModule:
   try:
     DB_Connection.db_open()
     Sound.enable_sound()
-    Graphic.Main()
+
+    Graphic.assignment()
+    Graphic.main()
 
   finally:
     DB_Connection.db_close()
     Sound.disable_sound()
+    
     Graphic.window_close()

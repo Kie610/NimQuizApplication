@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "metaData": {
+    "url": "https://github.com/can-lehmann/owlkettle",
+    "downloadMethod": "git",
+    "vcsRevision": "346e02d929e0e338151ac0627505e5569e202e1f",
+    "files": [
+      "\\owlkettle\\adw.nim",
+      "\\owlkettle\\widgetutils.nim",
+      "\\owlkettle\\widgets.nim",
+      "\\owlkettle.nimble",
+      "\\owlkettle\\bindings\\gtk.nim",
+      "\\owlkettle.nim",
+      "\\owlkettle\\playground.nim",
+      "\\owlkettle\\common.nim",
+      "\\owlkettle\\guidsl.nim",
+      "\\owlkettle\\bindings\\adw.nim",
+      "\\owlkettle\\dataentries.nim",
+      "\\owlkettle\\mainloop.nim",
+      "\\owlkettle\\cairo.nim",
+      "\\owlkettle\\widgetdef.nim"
+    ],
+    "binaries": [],
+    "specialVersions": [
+      "2.2.0",
+      "#head"
+    ]
+  }
+}
