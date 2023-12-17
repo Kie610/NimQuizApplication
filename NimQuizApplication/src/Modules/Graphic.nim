@@ -2,6 +2,7 @@
 #ライブラリのインポート
 #################################################
 import wNim
+import screen_layout
 
 
 #################################################
@@ -13,6 +14,17 @@ var
   panel: wPanel
   listbox: wListBox
   label: wTextCtrl
+
+  title: wTextCtrl
+  info: wTextCtrl
+  genre: wTextCtrl
+  question: wTextCtrl
+  options1: wButton
+  options2: wButton
+  options3: wButton
+  options4: wButton
+  prev: wButton
+  next: wButton
 
 
 #################################################
@@ -34,6 +46,17 @@ proc assignment*() =
   panel = Panel(frame)
   listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
   label = TextCtrl(panel, value="Label", style=wTeReadOnly)
+
+  title = TextCtrl(panel, value="title", style=wTeReadOnly)
+  info = TextCtrl(panel, value="info", style=wTeReadOnly)
+  genre = TextCtrl(panel, value="genre", style=wTeReadOnly)
+  question = TextCtrl(panel, value="question", style=wTeReadOnly)
+  options1 = Button(panel, label="options1")
+  options2 = Button(panel, label="options2")
+  options3 = Button(panel, label="options3")
+  options4 = Button(panel, label="options4")
+  prev = Button(panel, label="prev")
+  next = Button(panel, label="next")
 
 
   setFont(listbox, Font(20))
@@ -67,7 +90,7 @@ proc window_close*() =
 #   通常処理
 #################################################
 proc layout() =
-  panel.autolayout "spacing: 8 \nH:|-[label(40%)]-[listbox]-| \nV:|-[label,listbox]-|"
+  panel.autolayout(screen_layout.get_string("two_choice"))
 
 proc add(self: wListBox, text: string) =
   self.ensureVisible(self.append(text))
