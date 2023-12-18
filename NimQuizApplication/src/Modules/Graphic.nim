@@ -12,11 +12,6 @@ var
   app: wApp
   frame: wFrame
   panel: wPanel
-<<<<<<< HEAD
-  #listbox: wListBox
-  #label: wTextCtrl
-=======
->>>>>>> kie_Editing
 
   title: wStaticText
   info: wStaticText
@@ -38,10 +33,6 @@ var
 #################################################
 proc event()
 proc layout()
-<<<<<<< HEAD
-#proc add(self: wListBox, text: string)
-=======
->>>>>>> kie_Editing
 
 
 #################################################
@@ -53,21 +44,11 @@ proc assignment*() =
   app = App(wSystemDpiAware)
   frame = Frame(title=Title, size=(1280, 720))
   panel = Panel(frame)
-<<<<<<< HEAD
-  #listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
-  #label = TextCtrl(panel, value="Label", style=wTeReadOnly)
-
-  title = StaticText(panel, label="スタジオララの名前", style=(wAlignCenter + wAlignMiddle))
-  info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
-  genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
-  question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。\n〇か×か？", style=wTeReadOnly)
-=======
 
   title = StaticText(panel, label="スタジオ・ララ", style=(wAlignCenter + wAlignMiddle))
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
   genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
   question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。〇か×か？", style=(wTeReadOnly + wTeMultiLine))
->>>>>>> kie_Editing
   option1 = Button(panel, label="〇")
   option2 = Button(panel, label="×")
   #options3 = Button(panel, label="options3")
@@ -81,12 +62,6 @@ proc assignment*() =
 #   メインプロシージャ
 #################################################
 proc main*() =
-<<<<<<< HEAD
-#  for i in 0..10:
-#    listbox.add "Button" & $i
-
-=======
->>>>>>> kie_Editing
   layout()
   event()
   frame.center()
@@ -110,11 +85,7 @@ proc window_close*() =
 proc layout() =
   var font_size = (frame.getsize.width + frame.getsize.height)/200
 
-<<<<<<< HEAD
-  panel.autolayout(screen_layout.get_string("two_choice"))
-=======
   panel.autolayout(screen_layout.get_string("TwoChoice"))
->>>>>>> kie_Editing
 
   setFont(title, Font(font_size))
   setFont(info, Font(font_size))
@@ -124,34 +95,15 @@ proc layout() =
   setFont(option2, Font(font_size))
   setFont(prev, Font(font_size))
   setFont(next, Font(font_size))
-<<<<<<< HEAD
-
-#proc add(self: wListBox, text: string) =
-#  self.ensureVisible(self.append(text))
-=======
->>>>>>> kie_Editing
 
 
 #################################################
 #   イベント処理
 #################################################
 proc event() =
-<<<<<<< HEAD
-#  listbox.wEvent_ListBox do ():
-#    label.setValue($(listbox.getSelection()))
-#    echo $(listbox.getSelection())
-
   panel.wEvent_Size do ():
     layout()
 
-#  frame.wIdClear do ():
-#    listbox.clear()
-
-=======
-  panel.wEvent_Size do ():
-    layout()
-
->>>>>>> kie_Editing
   option1.wEvent_Button do ():
     selected_option = 1
     echo("Selected Button No." & $selected_option)
