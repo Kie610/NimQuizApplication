@@ -6,11 +6,19 @@ proc db_open*() =
   echo("Open DB")
   let db = open("Data/QUIZ_DATABASE.db", "", "", "")
 
-  db.exec(sql"""CREATE TABLE IF NOT EXISTS QUIZ_TABLE (
-      id    INTEGER PRIMARY KEY,
-      name  VARCHAR(50) NOT NULL,
-      i     INT(11),
-      f     DECIMAL(18, 10)
+  db.exec(sql"""CREATE TABLE IF NOT EXISTS T_QUIZ_TABLE (
+      ID      INTEGER PRIMARY KEY AUTOINCREMENT
+      ,Genre   INTEGER
+      ,Difficulity    INTEGER
+      ,Title          TEXT
+      ,Question       TEXT
+      ,Option1        TEXT
+      ,Option2        TEXT
+      ,Option3        TEXT
+      ,Option4        TEXT
+      ,Detail         TEXT
+      ,AddDT        TIMESTAMP DEFAULT (DATETIME(CURRENT_TIMESTAMP,'localtime'))
+      ,UpDT         TIMESTAMP
     )""")
 
 proc db_close*() =
