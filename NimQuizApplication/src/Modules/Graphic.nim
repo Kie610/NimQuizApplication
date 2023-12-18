@@ -45,7 +45,7 @@ proc assignment*() =
   frame = Frame(title=Title, size=(1280, 720))
   panel = Panel(frame)
 
-  title = StaticText(panel, label="スタジオララの名前", style=(wAlignCenter + wAlignMiddle))
+  title = StaticText(panel, label="スタジオ・ララ", style=(wAlignCenter + wAlignMiddle))
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
   genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
   question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。〇か×か？", style=(wTeReadOnly + wTeMultiLine))
@@ -85,7 +85,7 @@ proc window_close*() =
 proc layout() =
   var font_size = (frame.getsize.width + frame.getsize.height)/200
 
-  panel.autolayout(screen_layout.get_string("two_choice"))
+  panel.autolayout(screen_layout.get_string("TwoChoice"))
 
   setFont(title, Font(font_size))
   setFont(info, Font(font_size))
