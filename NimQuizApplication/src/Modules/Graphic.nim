@@ -2,6 +2,11 @@
 #ライブラリのインポート
 #################################################
 import wNim
+
+
+#################################################
+#モジュールのインポート
+#################################################
 import screen_layout
 
 
@@ -19,8 +24,8 @@ var
   question: wTextCtrl
   option1: wButton
   option2: wButton
-  #options3: wButton
-  #options4: wButton
+  option3: wButton
+  option4: wButton
   prev: wButton
   next: wButton
 
@@ -51,10 +56,13 @@ proc assignment*() =
   question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。〇か×か？", style=(wTeReadOnly + wTeMultiLine))
   option1 = Button(panel, label="〇")
   option2 = Button(panel, label="×")
-  #options3 = Button(panel, label="options3")
-  #options4 = Button(panel, label="options4")
+  option3 = Button(panel, label="option3")
+  option4 = Button(panel, label="option4")
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
+
+  #setWindowStyle(option3, style=(wInvisible))
+  #setWindowStyle(option4, style=(wInvisible))
 
   correct_answer = 2
 
@@ -114,9 +122,18 @@ proc event() =
 
   prev.wEvent_Button do ():
     echo("prev")
+
+    for child in getChildren(panel):
+      if getPosition(child).x == 0:
+        show(child)
   
   next.wEvent_Button do ():
     echo("next")
+
+    for child in getChildren(panel):
+      if getPosition(child).x == 0:
+        hide(child)
+
 
     if correct_answer == selected_option:
       echo("correct")

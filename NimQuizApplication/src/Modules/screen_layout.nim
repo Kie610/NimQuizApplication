@@ -39,7 +39,7 @@ proc get_string*(Layout_State: string): string =
   else:
     layout_string = """
         spacing: 8
-        H:|-[label(40%)]-[listbox]-|
-        V:|-[label,listbox]-|"""
+        H:|-[element["title"]]-|
+        V:|-[element["title"]]-|"""
 
   return layout_string
