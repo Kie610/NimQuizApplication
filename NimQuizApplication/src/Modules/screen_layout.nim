@@ -37,8 +37,7 @@ proc get_string*(Layout_State: string): string =
         H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
 
   else:
-    layout_string = """
-        spacing: 8
+    layout_string = "spacing: " & $space & """
         H:|-[element["title"]]-|
         V:|-[element["title"]]-|"""
 

@@ -1,46 +1,140 @@
+#################################################
 #ライブラリのインポート
+#################################################
 import wNim
 
-when isMainModule:
+#################################################
+#モジュールのインポート
+#################################################
+import screen_layout
+
+
+#################################################
+#変数宣言
+#################################################
+var
+  app: wApp
+  frame: wFrame
+  panel: wPanel
+
+  title: wStaticText
+  info: wStaticText
+  genre: wStaticText
+  question: wTextCtrl
+  option1: wButton
+  option2: wButton
+  option3: wButton
+  option4: wButton
+  prev: wButton
+  next: wButton
+
+  selected_option: uint8
+  correct_answer: uint8
+
+
+#################################################
+#   プロシージャ前方宣言
+#################################################
+proc event()
+proc layout()
+
+
+#################################################
+#   変数代入
+#################################################
+proc assignment*() =
   const
     Title = "クイズ出題アプリ"
+  app = App(wSystemDpiAware)
+  frame = Frame(title=Title, size=(1280, 720))
+  panel = Panel(frame)
 
-  let
-    app = App(wSystemDpiAware)
-    frame = Frame(title=Title, size=(400, 300))
-    panel = Panel(frame)
-    listbox = ListBox(panel, style=wBorderSimple or wLbNeededScroll)
+  title = StaticText(panel, label="スタジオ・ララ", style=(wAlignCenter + wAlignMiddle))
+  info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
+  genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
+  question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。〇か×か？", style=(wTeReadOnly + wTeMultiLine))
+  option1 = Button(panel, label="〇")
+  option2 = Button(panel, label="×")
+  option3 = Button(panel, label="option3")
+  option4 = Button(panel, label="option4")
+  prev = Button(panel, label="prev")
+  next = Button(panel, label="next")
 
-  setFont(listbox, Font(20))
+  correct_answer = 2
 
-  var
-    label = TextCtrl(panel, value="Label", style=wTeReadOnly)
+#################################################
+#   メインプロシージャ
+#################################################
+proc main*() =
+  layout()
+  event()
+  frame.center()
 
-  listbox.wEvent_ContextMenu do ():
-    let menu = Menu()
-    menu.append(wIdClear, "&Clear")
-    listbox.popupMenu(menu)
+  echo("Show Window")
+  frame.show()
+  app.mainLoop()
 
-  frame.wIdClear do ():
-    listbox.clear()
 
-  proc add(self: wListBox, text: string) =
-    self.ensureVisible(self.append(text))
+#################################################
+#   ウィンドウを閉じる処理
+#################################################
+proc window_close*() =
+  echo("Close Window")
+  frame.close()
 
-  for i in 0..10:
-    listbox.add "Button" & $i
 
-  proc layout() =
-    panel.autolayout "spacing: 8 \nH:|-[label(40%)]-[listbox]-| \nV:|-[label,listbox]-|"
+#################################################
+#   通常処理
+#################################################
+proc layout() =
+  var font_size = (frame.getsize.width + frame.getsize.height)/200
 
+  panel.autolayout(screen_layout.get_string("TwoChoice"))
+
+  setFont(title, Font(font_size))
+  setFont(info, Font(font_size))
+  setFont(genre, Font(font_size))
+  setFont(question, Font(font_size))
+  setFont(option1, Font(font_size))
+  setFont(option2, Font(font_size))
+  setFont(prev, Font(font_size))
+  setFont(next, Font(font_size))
+
+
+#################################################
+#   イベント処理
+#################################################
+proc event() =
   panel.wEvent_Size do ():
     layout()
 
-  listbox.wEvent_ListBox do ():
-    label.setValue($(listbox.getSelection()))
-    echo $(listbox.getSelection())
+  option1.wEvent_Button do ():
+    selected_option = 1
+    echo("Selected Button No." & $selected_option)
 
-  layout()
-  frame.center()
-  frame.show()
-  app.mainLoop()
+  option2.wEvent_Button do ():
+    selected_option = 2
+    echo("Selected Button No." & $selected_option)
+
+  prev.wEvent_Button do ():
+    echo("prev")
+
+    for child in getChildren(panel):
+      if getPosition(child).x == 0:
+        show(child)
+  
+  next.wEvent_Button do ():
+    echo("next")
+
+    for child in getChildren(panel):
+      if getPosition(child).x == 0:
+        hide(child)
+
+
+    if correct_answer == selected_option:
+      echo("correct")
+      setValue(question, value="正解！")
+
+    else:
+      echo("incorrect")
+      setValue(question, value="不正解！")
