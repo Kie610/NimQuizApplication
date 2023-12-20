@@ -136,14 +136,8 @@ proc layout() =
   elif menu.isChecked(idLayout3):
     panel.autolayout(screen_layout.get_string("default"))
 
-  setFont(title, Font(font_size))
-  setFont(info, Font(font_size))
-  setFont(genre, Font(font_size))
-  setFont(question, Font(font_size))
-  setFont(option1, Font(font_size))
-  setFont(option2, Font(font_size))
-  setFont(prev, Font(font_size))
-  setFont(next, Font(font_size))
+  for child in getChildren(panel):
+    setFont(child, Font(font_size))
 
 proc reset_position() =
   for child in getChildren(panel):

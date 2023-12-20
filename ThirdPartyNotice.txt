@@ -1,0 +1,31 @@
+Nim
+license: MIT License
+[https://github.com/nim-lang/Nim]
+
+  wNim
+  license: MIT License
+  [https://github.com/khchen/wNim]
+
+    winim
+    license: MIT License
+    [https://github.com/khchen/winim]
+
+    kiwi
+    license: MIT License
+    [https://github.com/yglukhov/kiwi]
+
+  slappy
+  license: MIT License
+  [https://github.com/treeform/slappy]
+
+    openal
+    license: MIT License
+    [https://github.com/treeform/openal]
+
+    sound
+    license: MIT License
+    [https://github.com/yglukhov/sound]
+
+db_connector
+license: MIT License
+[https://github.com/nim-lang/db_connector]
