@@ -38,7 +38,7 @@ proc get_string*(Layout_State: string): string =
 
   else:
     layout_string = "spacing: " & $space & """
-        H:|-[element["title"]]-|
-        V:|-[element["title"]]-|"""
+        H:|-[title]-|
+        V:|-[title]-|"""
 
   return layout_string

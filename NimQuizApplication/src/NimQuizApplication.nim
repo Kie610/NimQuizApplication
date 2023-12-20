@@ -15,8 +15,10 @@ import Modules/[screen_layout, Sound, DB_Connection]
 proc main_loop()
 proc assignment()
 proc window_close()
-proc event()
+proc reset_position()
 proc layout()
+proc showing()
+proc event()
 
 
 #################################################
@@ -45,6 +47,9 @@ var
   app: wApp
   frame: wFrame
   panel: wPanel
+  menubar: wMenuBar
+
+  menu: wMenu
 
   title: wStaticText
   info: wStaticText
@@ -60,6 +65,8 @@ var
   selected_option: uint8
   correct_answer: uint8
 
+type
+    MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idExit
 
 #################################################
 #   変数代入
@@ -68,8 +75,16 @@ proc assignment() =
   const
     Title = "クイズ出題アプリ"
   app = App(wSystemDpiAware)
-  frame = Frame(title=Title, size=(1280, 720))
-  panel = Panel(frame)
+  frame = Frame(title=Title, size=(1280, 720),)
+  panel = Panel(frame, style=wDoubleBuffered)
+  menubar = MenuBar(frame)
+
+  menu = Menu(menubar, "layout")
+  menu.appendRadioItem(idLayout1, "Layout1").check()
+  menu.appendRadioItem(idLayout2, "Layout2")
+  menu.appendRadioItem(idLayout3, "Layout3")
+  menu.appendSeparator()
+  menu.append(idExit, "Exit")
 
   title = StaticText(panel, label="スタジオ・ララ", style=(wAlignCenter + wAlignMiddle))
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
@@ -89,6 +104,7 @@ proc assignment() =
 #################################################
 proc main_loop() =
   layout()
+  showing()
   event()
   frame.center()
 
@@ -111,7 +127,14 @@ proc window_close() =
 proc layout() =
   var font_size = (frame.getsize.width + frame.getsize.height)/200
 
-  panel.autolayout(screen_layout.get_string("TwoChoice"))
+  if menu.isChecked(idLayout1):
+    panel.autolayout(screen_layout.get_string("TwoChoice"))
+
+  elif menu.isChecked(idLayout2):
+    panel.autolayout(screen_layout.get_string("FourChoice"))
+
+  elif menu.isChecked(idLayout3):
+    panel.autolayout(screen_layout.get_string("default"))
 
   setFont(title, Font(font_size))
   setFont(info, Font(font_size))
@@ -122,13 +145,42 @@ proc layout() =
   setFont(prev, Font(font_size))
   setFont(next, Font(font_size))
 
+proc reset_position() =
+  for child in getChildren(panel):
+    setPosition(child, x=0, y=0)
+
+proc showing() =
+  for child in getChildren(panel):
+    if getPosition(child).x == 0:
+      hide(child)
+    else:
+      show(child)
+
 
 #################################################
 #   イベント処理
 #################################################
 proc event() =
-  panel.wEvent_Size do ():
+  frame.idLayout1 do ():
+    reset_position()
     layout()
+    showing()
+
+
+  frame.idLayout2 do ():
+    reset_position()
+    layout()
+    showing()
+
+  frame.idLayout3 do ():
+    reset_position()
+    layout()
+    showing()
+
+
+  frame.idExit do (): frame.close()
+
+  panel.wEvent_Size do ():layout()
 
   option1.wEvent_Button do ():
     selected_option = 1
