@@ -24,3 +24,6 @@ proc db_open*() =
 proc db_close*() =
   echo("Close DB")
   db.close()
+
+proc get_genre_name*() =
+  getAllRows(db, """SELECT""")
