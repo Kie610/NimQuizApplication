@@ -106,6 +106,7 @@ proc assignment() =
 #   メインプロシージャ
 #################################################
 proc main_loop() =
+  reset_position()
   layout()
   showing()
   event()
@@ -143,6 +144,19 @@ proc layout() =
     setFont(child, Font(font_size))
 
 proc reset_position() =
+  var
+    quiz_data: seq[string]
+  
+  quiz_data = get_quiz_data()
+  
+  setTitle(title, quiz_data[1])
+  setTitle(genre, quiz_data[2])
+  setTitle(question, quiz_data[3])
+  setTitle(option1, quiz_data[4])
+  setTitle(option2, quiz_data[5])
+  setTitle(option3, quiz_data[6])
+  setTitle(option4, quiz_data[7])
+
   for child in getChildren(panel):
     setPosition(child, x=0, y=0)
 
