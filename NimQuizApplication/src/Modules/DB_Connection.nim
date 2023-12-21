@@ -4,7 +4,7 @@ var db: DbConn
 
 proc db_open*() =
   echo("Open DB")
-  let db = open("Data/QUIZ_DATABASE.db", "", "", "")
+  db = open("Data/QUIZ_DATABASE.db", "", "", "")
 
   db.exec(sql"""CREATE TABLE IF NOT EXISTS T_QUIZ_TABLE (
       ID      INTEGER PRIMARY KEY AUTOINCREMENT
@@ -26,4 +26,19 @@ proc db_close*() =
   db.close()
 
 proc get_genre_name*() =
-  getAllRows(db, """SELECT""")
+  var genre_name: seq[Row]
+  
+  genre_name = db.getAllRows(sql"SELECT Genre_Name,Genre_Detail,Genre FROM M_GENRE_MASTER")
+
+  for row in genre_name:
+    for item in row:
+      echo(item)
+
+proc get_Difficulty_name*() =
+  var difficulty_name: seq[Row]
+  
+  difficulty_name = db.getAllRows(sql"SELECT Difficulty_Name,Difficulty_Detail,Difficulty FROM M_DIFFICULTY_MASTER")
+
+  for row in difficulty_name:
+    for item in row:
+      echo(item)

@@ -30,6 +30,9 @@ when isMainModule:
     DB_Connection.db_open()
     Sound.enable_sound()
 
+    get_genre_name()
+    get_Difficulty_name()
+
     assignment()
     main_loop()
 
@@ -89,7 +92,7 @@ proc assignment() =
   title = StaticText(panel, label="スタジオ・ララ", style=(wAlignCenter + wAlignMiddle))
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
   genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
-  question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。〇か×か？", style=(wTeReadOnly + wTeMultiLine))
+  question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。\n\n〇か×か？", style=(wTeReadOnly + wTeMultiLine + wTeRich))
   option1 = Button(panel, label="〇")
   option2 = Button(panel, label="×")
   option3 = Button(panel, label="option3")
@@ -182,6 +185,14 @@ proc event() =
 
   option2.wEvent_Button do ():
     selected_option = 2
+    echo("Selected Button No." & $selected_option)
+
+  option3.wEvent_Button do ():
+    selected_option = 3
+    echo("Selected Button No." & $selected_option)
+
+  option4.wEvent_Button do ():
+    selected_option = 4
     echo("Selected Button No." & $selected_option)
 
   prev.wEvent_Button do ():
