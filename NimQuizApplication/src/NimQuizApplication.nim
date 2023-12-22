@@ -70,7 +70,7 @@ var
   correct_answer: string
 
 type
-    MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idExit
+    MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idLayout4, idExit
 
 #################################################
 #   変数代入
@@ -89,6 +89,7 @@ proc assignment() =
   menu.appendRadioItem(idLayout1, "Layout1").check()
   menu.appendRadioItem(idLayout2, "Layout2")
   menu.appendRadioItem(idLayout3, "Layout3")
+  menu.appendRadioItem(idLayout4, "Layout4")
   menu.appendSeparator()
   menu.append(idExit, "Exit")
 
@@ -136,9 +137,12 @@ proc layout() =
     panel.autolayout(screen_layout.get_string("TwoChoice"))
 
   elif menu.isChecked(idLayout2):
-    panel.autolayout(screen_layout.get_string("FourChoice"))
+    panel.autolayout(screen_layout.get_string("ThreeChoice"))
 
   elif menu.isChecked(idLayout3):
+    panel.autolayout(screen_layout.get_string("FourChoice"))
+
+  elif menu.isChecked(idLayout4):
     panel.autolayout(screen_layout.get_string("default"))
 
   for child in getChildren(panel):
@@ -196,13 +200,17 @@ proc event() =
     layout()
     showing()
 
-
   frame.idLayout2 do ():
     reset_position()
     layout()
     showing()
 
   frame.idLayout3 do ():
+    reset_position()
+    layout()
+    showing()
+
+  frame.idLayout4 do ():
     reset_position()
     layout()
     showing()

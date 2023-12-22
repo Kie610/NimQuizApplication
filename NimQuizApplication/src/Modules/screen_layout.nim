@@ -18,6 +18,21 @@ proc get_string*(Layout_State: string): string =
 
         H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
 
+  of "ThreeChoice":
+    layout_string = "spacing: " & $space & """
+        H:|-(10%)-[Header]-(10%)-|
+        H:|-(20%)-[Question]-(20%)-|
+        H:|-(10%)-[Options]-(10%)-|
+        H:|-(10%)-[Fooder]-(10%)-|
+        V:|-[Header(10%)]-[Question(40%)]-[Options]-[Fooder(10%)]-|
+
+        H:[Header:-[title(80%)]-[info]-]
+
+        H:[Question:[question]]
+        H:[Options:[option1(option2,option3)]-[option2]-[option3]]
+
+        H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
+
   of "FourChoice":
     layout_string = "spacing: " & $space & """
         H:|-(10%)-[Header]-(10%)-|
