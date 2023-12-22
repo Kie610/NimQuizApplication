@@ -28,7 +28,7 @@ proc db_close*() =
   echo("Close DB")
   db.close()
 
-proc get_genre_name*() =
+proc get_genre_info*() =
   var genre_name: seq[Row]
   
   genre_name = db.getAllRows(sql"""
@@ -45,7 +45,7 @@ proc get_genre_name*() =
   for row in genre_name:
     echo(row)
 
-proc get_Difficulty_name*() =
+proc get_Difficulty_info*() =
   var difficulty_name: seq[Row]
   
   difficulty_name = db.getAllRows(sql"""

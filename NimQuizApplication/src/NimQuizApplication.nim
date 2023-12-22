@@ -4,6 +4,7 @@
 import std/[random, strutils]
 import wNim
 
+
 #################################################
 #モジュールのインポート
 #################################################
@@ -26,13 +27,12 @@ proc event()
 #   メインモジュール記述
 #################################################
 when isMainModule:
-  
   try:
     DB_Connection.db_open()
     Sound.enable_sound()
 
-    get_genre_name()
-    get_Difficulty_name()
+    get_genre_info()
+    get_Difficulty_info()
 
     assignment()
     main_loop()
@@ -40,7 +40,7 @@ when isMainModule:
   finally:
     DB_Connection.db_close()
     Sound.disable_sound()
-    
+
     window_close()
 
 
@@ -56,6 +56,13 @@ var
   menu: wMenu
 
   title: wStaticText
+  genre_list: wListBox
+  detail: wTextCtrl
+  graphic_setting: wButton
+  font_setting: wButton
+  sound_setting: wButton
+  credit: wButton
+
   info: wStaticText
   genre: wStaticText
   question: wTextCtrl
@@ -72,16 +79,15 @@ var
 type
     MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idLayout4, idExit
 
+
 #################################################
 #   変数代入
 #################################################
 proc assignment() =
-  randomize()
-
   const
     Title = "クイズ出題アプリ"
   app = App(wSystemDpiAware)
-  frame = Frame(title=Title, size=(1280, 720),)
+  frame = Frame(title=Title, size=(1280, 720))
   panel = Panel(frame, style=wDoubleBuffered)
   menubar = MenuBar(frame)
 
@@ -94,6 +100,13 @@ proc assignment() =
   menu.append(idExit, "Exit")
 
   title = StaticText(panel, style=(wAlignCenter + wAlignMiddle))
+  genre_list = ListBox(panel)
+  detail = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
+  graphic_setting = Button(panel)
+  font_setting = Button(panel)
+  sound_setting = Button(panel)
+  credit = Button(panel)
+
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
   genre = StaticText(panel, style=(wAlignCenter + wAlignMiddle))
   question = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
@@ -103,6 +116,7 @@ proc assignment() =
   option4 = Button(panel)
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
+
 
 #################################################
 #   メインプロシージャ
@@ -152,7 +166,7 @@ proc reset_position() =
   var
     quiz_data: seq[string]
     option_array: seq[string]
-  
+
   quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)))
 
   setTitle(title, quiz_data[1])
@@ -162,21 +176,15 @@ proc reset_position() =
   for i in countup(6, 6 + parseInt(quiz_data[3]) - 1):
     option_array.add(quiz_data[i])
 
-  echo(option_array)
   shuffle(option_array)
-  echo(option_array)
-  
+
   for i in countup(6 + parseInt(quiz_data[3]), 6 + 4 - 1):
     option_array.add("")
-  
-  echo(option_array)
-  echo(option_array)
 
   setTitle(option1, option_array[0])
   setTitle(option2, option_array[1])
   setTitle(option3, option_array[2])
   setTitle(option4, option_array[3])
-
 
   correct_answer = quiz_data[6]
 
@@ -215,7 +223,6 @@ proc event() =
     layout()
     showing()
 
-
   frame.idExit do (): frame.close()
 
   panel.wEvent_Size do ():layout()
@@ -249,7 +256,6 @@ proc event() =
     for child in getChildren(panel):
       if getPosition(child).x == 0:
         hide(child)
-
 
     if correct_answer == selected_option:
       echo("correct")
