@@ -1,7 +1,9 @@
 #ライブラリのインポート
+import std/random
 import db_connector/db_sqlite
 
 var db: DbConn
+randomize()
 
 proc db_open*() =
   echo("Open DB")
@@ -33,6 +35,7 @@ proc get_genre_name*() =
     SELECT
       Genre_Name
       ,Genre_Detail
+      ,Genre_Option_Count
       ,Genre
     
     FROM
@@ -57,14 +60,21 @@ proc get_Difficulty_name*() =
   for row in difficulty_name:
     echo(row)
 
-proc get_quiz_data*(): seq[string] =
+proc get_quiz_data*(genre: uint8, difficulty: uint8): seq[string] =
   var quiz_data: seq[string]
 
-  quiz_data = db.getRow(sql"""
+  var
+    sql1: string
+    sql2: string
+    sql3: string
+
+  sql1 = """
     SELECT
       T_QUIZ_TABLE.ID
       ,T_QUIZ_TABLE.Title
       ,M_GENRE_MASTER.Genre_Name
+      ,M_GENRE_MASTER.Genre_Option_Count
+      ,M_DIFFICULTY_MASTER.Difficulty_Name
       ,T_QUIZ_TABLE.Question
       ,T_QUIZ_TABLE.Option1
       ,T_QUIZ_TABLE.Option2
@@ -78,15 +88,20 @@ proc get_quiz_data*(): seq[string] =
     INNER JOIN M_GENRE_MASTER
       ON T_QUIZ_TABLE.Genre = M_GENRE_MASTER.Genre
 
-    WHERE
-      T_QUIZ_TABLE.Genre = 1
-      AND T_QUIZ_TABLE.Difficulty = 1
+    INNER JOIN M_DIFFICULTY_MASTER
+      ON T_QUIZ_TABLE.Difficulty = M_DIFFICULTY_MASTER.Difficulty
 
-    ORDER BY
-      RANDOM()
+    WHERE
+      T_QUIZ_TABLE.Genre = """
+
+  sql2 = """
+      AND T_QUIZ_TABLE.Difficulty = """
     
-    LIMIT 10
-    """)
+  sql3 = """
+    ORDER BY RANDOM()
+    LIMIT 10"""
+
+  quiz_data = db.getRow(sql(sql1 & $genre & sql2 & $difficulty & sql3))
 
   echo(quiz_data)
   

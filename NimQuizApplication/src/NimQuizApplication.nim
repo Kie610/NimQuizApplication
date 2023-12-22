@@ -1,6 +1,7 @@
 #################################################
 #ライブラリのインポート
 #################################################
+import std/[random, strutils]
 import wNim
 
 #################################################
@@ -65,8 +66,8 @@ var
   prev: wButton
   next: wButton
 
-  selected_option: uint8
-  correct_answer: uint8
+  selected_option: string
+  correct_answer: string
 
 type
     MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idExit
@@ -75,6 +76,8 @@ type
 #   変数代入
 #################################################
 proc assignment() =
+  randomize()
+
   const
     Title = "クイズ出題アプリ"
   app = App(wSystemDpiAware)
@@ -89,18 +92,16 @@ proc assignment() =
   menu.appendSeparator()
   menu.append(idExit, "Exit")
 
-  title = StaticText(panel, label="スタジオ・ララ", style=(wAlignCenter + wAlignMiddle))
+  title = StaticText(panel, style=(wAlignCenter + wAlignMiddle))
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
-  genre = StaticText(panel, label="〇×ゲーム", style=(wAlignCenter + wAlignMiddle))
-  question = TextCtrl(panel, value="スタジオララ(旧:田中工務店)の正式名称は「Sutudio RaLa」である。\n\n〇か×か？", style=(wTeReadOnly + wTeMultiLine + wTeRich))
-  option1 = Button(panel, label="〇")
-  option2 = Button(panel, label="×")
-  option3 = Button(panel, label="option3")
-  option4 = Button(panel, label="option4")
+  genre = StaticText(panel, style=(wAlignCenter + wAlignMiddle))
+  question = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
+  option1 = Button(panel)
+  option2 = Button(panel)
+  option3 = Button(panel)
+  option4 = Button(panel)
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
-
-  correct_answer = 2
 
 #################################################
 #   メインプロシージャ
@@ -146,16 +147,34 @@ proc layout() =
 proc reset_position() =
   var
     quiz_data: seq[string]
+    option_array: seq[string]
   
-  quiz_data = get_quiz_data()
-  
+  quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)))
+
   setTitle(title, quiz_data[1])
   setTitle(genre, quiz_data[2])
-  setTitle(question, quiz_data[3])
-  setTitle(option1, quiz_data[4])
-  setTitle(option2, quiz_data[5])
-  setTitle(option3, quiz_data[6])
-  setTitle(option4, quiz_data[7])
+  setTitle(question, quiz_data[5])
+
+  for i in countup(6, 6 + parseInt(quiz_data[3]) - 1):
+    option_array.add(quiz_data[i])
+
+  echo(option_array)
+  shuffle(option_array)
+  echo(option_array)
+  
+  for i in countup(6 + parseInt(quiz_data[3]), 6 + 4 - 1):
+    option_array.add("")
+  
+  echo(option_array)
+  echo(option_array)
+
+  setTitle(option1, option_array[0])
+  setTitle(option2, option_array[1])
+  setTitle(option3, option_array[2])
+  setTitle(option4, option_array[3])
+
+
+  correct_answer = quiz_data[6]
 
   for child in getChildren(panel):
     setPosition(child, x=0, y=0)
@@ -194,19 +213,19 @@ proc event() =
   panel.wEvent_Size do ():layout()
 
   option1.wEvent_Button do ():
-    selected_option = 1
+    selected_option = getTitle(option1)
     echo("Selected Button No." & $selected_option)
 
   option2.wEvent_Button do ():
-    selected_option = 2
+    selected_option = getTitle(option2)
     echo("Selected Button No." & $selected_option)
 
   option3.wEvent_Button do ():
-    selected_option = 3
+    selected_option = getTitle(option3)
     echo("Selected Button No." & $selected_option)
 
   option4.wEvent_Button do ():
-    selected_option = 4
+    selected_option = getTitle(option4)
     echo("Selected Button No." & $selected_option)
 
   prev.wEvent_Button do ():
