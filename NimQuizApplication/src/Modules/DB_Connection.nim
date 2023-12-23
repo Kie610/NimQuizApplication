@@ -1,10 +1,20 @@
-#ライブラリのインポート
+#################################################
+#   ライブラリのインポート
+#################################################
 import std/random
 import db_connector/db_sqlite
 
+
+#################################################
+#   変数宣言
+#################################################
 var db: DbConn
 randomize()
 
+
+#################################################
+#   データベース接続
+#################################################
 proc db_open*() =
   echo("Open DB")
   db = open("Data/QUIZ_DATABASE.db", "", "", "")
@@ -24,31 +34,42 @@ proc db_open*() =
       ,UpDT         TIMESTAMP
     )""")
 
+
+#################################################
+#   データベース切断
+#################################################
 proc db_close*() =
   echo("Close DB")
   db.close()
 
+
+#################################################
+#   ジャンル関連情報取得
+#################################################
 proc get_genre_info*() =
-  var genre_name: seq[Row]
+  var genre_table: seq[seq[string]]
   
-  genre_name = db.getAllRows(sql"""
+  genre_table = db.getAllRows(sql"""
     SELECT
       Genre_Name
       ,Genre_Detail
-      ,Genre_Option_Count
       ,Genre
+      ,Genre_Option_Count
     
     FROM
       M_GENRE_MASTER
     """)
 
-  for row in genre_name:
-    echo(row)
+  echo(genre_table)
 
+
+#################################################
+#   難易度関連情報取得
+#################################################
 proc get_Difficulty_info*() =
-  var difficulty_name: seq[Row]
+  var difficulty_table: seq[seq[string]]
   
-  difficulty_name = db.getAllRows(sql"""
+  difficulty_table = db.getAllRows(sql"""
     SELECT
       Difficulty_Name
       ,Difficulty_Detail
@@ -57,10 +78,14 @@ proc get_Difficulty_info*() =
       M_DIFFICULTY_MASTER
     """)
 
-  for row in difficulty_name:
-    echo(row)
+  echo(difficulty_table)
 
-proc get_quiz_data*(genre: uint8, difficulty: uint8): seq[string] =
+
+
+#################################################
+#   クイズ情報取得
+#################################################
+proc get_quiz_data*(genre: uint8, difficulty: uint8, quiz_quantity: uint8): seq[string] =
   var quiz_data: seq[string]
 
   var
@@ -99,9 +124,9 @@ proc get_quiz_data*(genre: uint8, difficulty: uint8): seq[string] =
     
   sql3 = """
     ORDER BY RANDOM()
-    LIMIT 10"""
+    LIMIT """
 
-  quiz_data = db.getRow(sql(sql1 & $genre & sql2 & $difficulty & sql3))
+  quiz_data = db.getRow(sql(sql1 & $genre & sql2 & $difficulty & sql3 & $quiz_quantity))
 
   echo(quiz_data)
   

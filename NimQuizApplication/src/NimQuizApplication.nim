@@ -18,6 +18,7 @@ proc main_loop()
 proc assignment()
 proc window_close()
 proc reset_position()
+proc choice_quiz_store()
 proc layout()
 proc showing()
 proc event()
@@ -77,7 +78,7 @@ var
   correct_answer: string
 
 type
-    MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idLayout4, idExit
+    MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idLayout4, idLayout5, idExit
 
 
 #################################################
@@ -92,20 +93,21 @@ proc assignment() =
   menubar = MenuBar(frame)
 
   menu = Menu(menubar, "layout")
-  menu.appendRadioItem(idLayout1, "Layout1").check()
+  menu.appendRadioItem(idLayout1, "Layout1")
   menu.appendRadioItem(idLayout2, "Layout2")
   menu.appendRadioItem(idLayout3, "Layout3")
   menu.appendRadioItem(idLayout4, "Layout4")
+  menu.appendRadioItem(idLayout5, "Layout5").check()
   menu.appendSeparator()
   menu.append(idExit, "Exit")
 
-  title = StaticText(panel, style=(wAlignCenter + wAlignMiddle))
+  title = StaticText(panel, label="MainMenu", style=(wAlignCenter + wAlignMiddle))
   genre_list = ListBox(panel)
   detail = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
-  graphic_setting = Button(panel)
-  font_setting = Button(panel)
-  sound_setting = Button(panel)
-  credit = Button(panel)
+  graphic_setting = Button(panel, label="Graphic")
+  font_setting = Button(panel, label="Font")
+  sound_setting = Button(panel, label="Sound")
+  credit = Button(panel, label="Credit")
 
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
   genre = StaticText(panel, style=(wAlignCenter + wAlignMiddle))
@@ -159,15 +161,29 @@ proc layout() =
   elif menu.isChecked(idLayout4):
     panel.autolayout(screen_layout.get_string("default"))
 
+  elif menu.isChecked(idLayout5):
+    panel.autolayout(screen_layout.get_string("MainMenu"))
+
   for child in getChildren(panel):
     setFont(child, Font(font_size))
 
 proc reset_position() =
+  for child in getChildren(panel):
+    setPosition(child, x=0, y=0)
+
+proc showing() =
+  for child in getChildren(panel):
+    if getPosition(child).x == 0:
+      hide(child)
+    else:
+      show(child)
+
+proc choice_quiz_store() =
   var
     quiz_data: seq[string]
     option_array: seq[string]
 
-  quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)))
+  quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)), 1)
 
   setTitle(title, quiz_data[1])
   setTitle(genre, quiz_data[2])
@@ -188,33 +204,29 @@ proc reset_position() =
 
   correct_answer = quiz_data[6]
 
-  for child in getChildren(panel):
-    setPosition(child, x=0, y=0)
-
-proc showing() =
-  for child in getChildren(panel):
-    if getPosition(child).x == 0:
-      hide(child)
-    else:
-      show(child)
-
 
 #################################################
 #   イベント処理
 #################################################
 proc event() =
+  panel.wEvent_Size do ():
+    layout()
+
   frame.idLayout1 do ():
     reset_position()
+    choice_quiz_store()
     layout()
     showing()
 
   frame.idLayout2 do ():
     reset_position()
+    choice_quiz_store()
     layout()
     showing()
 
   frame.idLayout3 do ():
     reset_position()
+    choice_quiz_store()
     layout()
     showing()
 
@@ -223,9 +235,18 @@ proc event() =
     layout()
     showing()
 
+  frame.idLayout5 do ():
+    reset_position()
+    layout()
+    showing()
+
   frame.idExit do (): frame.close()
 
-  panel.wEvent_Size do ():layout()
+  frame.wEvent_KeyDown do ():
+    echo()
+    if wKey_M == getKeyCode(wEvent_KeyDown)
+      echo()
+
 
   option1.wEvent_Button do ():
     selected_option = getTitle(option1)
@@ -244,14 +265,14 @@ proc event() =
     echo("Selected Button No." & $selected_option)
 
   prev.wEvent_Button do ():
-    echo("prev")
+    echo("戻る")
 
     for child in getChildren(panel):
       if getPosition(child).x == 0:
         show(child)
   
   next.wEvent_Button do ():
-    echo("next")
+    echo("決定")
 
     for child in getChildren(panel):
       if getPosition(child).x == 0:
