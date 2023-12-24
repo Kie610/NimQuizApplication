@@ -17,6 +17,7 @@ import Modules/[screen_layout, Sound, DB_Connection]
 proc main_loop()
 proc assignment()
 proc window_close()
+proc layout_change()
 proc reset_position()
 proc choice_quiz_store()
 proc layout()
@@ -31,9 +32,6 @@ when isMainModule:
   try:
     DB_Connection.db_open()
     Sound.enable_sound()
-
-    get_genre_info()
-    get_Difficulty_info()
 
     assignment()
     main_loop()
@@ -58,6 +56,7 @@ var
 
   title: wStaticText
   genre_list: wListBox
+  difficulty_list: wListBox
   detail: wTextCtrl
   graphic_setting: wButton
   font_setting: wButton
@@ -77,8 +76,11 @@ var
   selected_option: string
   correct_answer: string
 
+  genre_table: seq[seq[string]]
+  difficulty_table: seq[seq[string]]
+
 type
-    MenuID = enum idLayout1 = wIdUser, idLayout2, idLayout3, idLayout4, idLayout5, idExit
+    MenuID = enum idTwoChoice = wIdUser, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idExit
 
 
 #################################################
@@ -93,16 +95,17 @@ proc assignment() =
   menubar = MenuBar(frame)
 
   menu = Menu(menubar, "layout")
-  menu.appendRadioItem(idLayout1, "Layout1")
-  menu.appendRadioItem(idLayout2, "Layout2")
-  menu.appendRadioItem(idLayout3, "Layout3")
-  menu.appendRadioItem(idLayout4, "Layout4")
-  menu.appendRadioItem(idLayout5, "Layout5").check()
+  menu.appendRadioItem(idTwoChoice, "TwoChoice")
+  menu.appendRadioItem(idThreeChoice, "ThreeChoice")
+  menu.appendRadioItem(idFourChoice, "FourChoice")
+  menu.appendRadioItem(idOnlyTitle, "OnlyTitle").check()
+  menu.appendRadioItem(idMainMenu, "MainMenu")
   menu.appendSeparator()
   menu.append(idExit, "Exit")
 
   title = StaticText(panel, label="MainMenu", style=(wAlignCenter + wAlignMiddle))
-  genre_list = ListBox(panel)
+  genre_list = ListBox(panel, style=(wLbSingle))
+  difficulty_list = ListBox(panel, style=(wLbSingle))
   detail = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
   graphic_setting = Button(panel, label="Graphic")
   font_setting = Button(panel, label="Font")
@@ -120,11 +123,24 @@ proc assignment() =
   next = Button(panel, label="next")
 
 
+
+  genre_table = get_genre_info()
+
+  for row in genre_table:
+    genre_list.append(row[0])
+  
+  difficulty_table = get_difficulty_info()
+
+  for row in difficulty_table:
+    difficulty_list.append(row[0])
+
+
 #################################################
 #   メインプロシージャ
 #################################################
 proc main_loop() =
   reset_position()
+  layout_change()
   layout()
   showing()
   event()
@@ -144,24 +160,59 @@ proc window_close() =
 
 
 #################################################
+#   レイアウト変更時処理
+#################################################
+proc layout_change() =
+  frame.idTwoChoice do ():
+    reset_position()
+    choice_quiz_store()
+    layout()
+    showing()
+
+  frame.idThreeChoice do ():
+    reset_position()
+    choice_quiz_store()
+    layout()
+    showing()
+
+  frame.idFourChoice do ():
+    reset_position()
+    choice_quiz_store()
+    layout()
+    showing()
+
+  frame.idOnlyTitle do ():
+    reset_position()
+    layout()
+    showing()
+
+  frame.idMainMenu do ():
+    reset_position()
+    layout()
+    showing()
+
+  frame.idExit do (): frame.close()
+
+
+#################################################
 #   通常処理
 #################################################
 proc layout() =
   var font_size = (frame.getsize.width + frame.getsize.height)/200
 
-  if menu.isChecked(idLayout1):
+  if menu.isChecked(idTwoChoice):
     panel.autolayout(screen_layout.get_string("TwoChoice"))
 
-  elif menu.isChecked(idLayout2):
+  elif menu.isChecked(idThreeChoice):
     panel.autolayout(screen_layout.get_string("ThreeChoice"))
 
-  elif menu.isChecked(idLayout3):
+  elif menu.isChecked(idFourChoice):
     panel.autolayout(screen_layout.get_string("FourChoice"))
 
-  elif menu.isChecked(idLayout4):
+  elif menu.isChecked(idOnlyTitle):
     panel.autolayout(screen_layout.get_string("default"))
 
-  elif menu.isChecked(idLayout5):
+  elif menu.isChecked(idMainMenu):
     panel.autolayout(screen_layout.get_string("MainMenu"))
 
   for child in getChildren(panel):
@@ -212,40 +263,13 @@ proc event() =
   panel.wEvent_Size do ():
     layout()
 
-#  frame.wEvent_KeyDown do (event: wEvent):
-#    echo("KeyEvent")
-#    echo wKey_M in event.getKeyStatus
-#    echo($event.getKeyStatus)
+  panel.wEvent_KeyDown do (event: wEvent):
+    echo("panelKeyEvent")
+    echo wKey_M in event.getKeyStatus
+    echo($event.getKeyStatus)
 
-  frame.idLayout1 do ():
-    reset_position()
-    choice_quiz_store()
-    layout()
-    showing()
-
-  frame.idLayout2 do ():
-    reset_position()
-    choice_quiz_store()
-    layout()
-    showing()
-
-  frame.idLayout3 do ():
-    reset_position()
-    choice_quiz_store()
-    layout()
-    showing()
-
-  frame.idLayout4 do ():
-    reset_position()
-    layout()
-    showing()
-
-  frame.idLayout5 do ():
-    reset_position()
-    layout()
-    showing()
-
-  frame.idExit do (): frame.close()
+  genre_list.wEvent_ListBox do ():
+    echo("SelectedItem" & $genre_list.getSelection())
 
   option1.wEvent_Button do ():
     selected_option = getTitle(option1)

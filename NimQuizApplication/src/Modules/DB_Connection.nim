@@ -46,7 +46,7 @@ proc db_close*() =
 #################################################
 #   ジャンル関連情報取得
 #################################################
-proc get_genre_info*() =
+proc get_genre_info*(): seq[seq[string]] =
   var genre_table: seq[seq[string]]
   
   genre_table = db.getAllRows(sql"""
@@ -62,11 +62,13 @@ proc get_genre_info*() =
 
   echo(genre_table)
 
+  return genre_table
+
 
 #################################################
 #   難易度関連情報取得
 #################################################
-proc get_Difficulty_info*() =
+proc get_Difficulty_info*(): seq[seq[string]] =
   var difficulty_table: seq[seq[string]]
   
   difficulty_table = db.getAllRows(sql"""
@@ -79,6 +81,8 @@ proc get_Difficulty_info*() =
     """)
 
   echo(difficulty_table)
+
+  return difficulty_table
 
 
 
