@@ -212,6 +212,11 @@ proc event() =
   panel.wEvent_Size do ():
     layout()
 
+#  frame.wEvent_KeyDown do (event: wEvent):
+#    echo("KeyEvent")
+#    echo wKey_M in event.getKeyStatus
+#    echo($event.getKeyStatus)
+
   frame.idLayout1 do ():
     reset_position()
     choice_quiz_store()
@@ -241,12 +246,6 @@ proc event() =
     showing()
 
   frame.idExit do (): frame.close()
-
-  frame.wEvent_KeyDown do ():
-    echo()
-    if wKey_M == getKeyCode(wEvent_KeyDown)
-      echo()
-
 
   option1.wEvent_Button do ():
     selected_option = getTitle(option1)
