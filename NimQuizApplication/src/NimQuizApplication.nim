@@ -48,7 +48,7 @@ when isMainModule:
 #################################################
 type
     MenuID = enum
-      idTwoChoice = wIdUser, idManualChoice, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idExit
+      idTwoChoice = wIdUser, idManualChoice, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idDifMenu, idExit
 
     MenuState = enum
       stMainMenu = 1
@@ -132,6 +132,7 @@ proc assignment() =
   menu.appendRadioItem(idFourChoice, "FourChoice")
   menu.appendRadioItem(idOnlyTitle, "OnlyTitle").check()
   menu.appendRadioItem(idMainMenu, "MainMenu")
+  menu.appendRadioItem(idDifMenu, "DifMenu")
   menu.appendSeparator()
   menu.append(idExit, "Exit")
 
@@ -230,6 +231,11 @@ proc layout_change() =
     layout()
     showing()
 
+  frame.idDifMenu do ():
+    reset_position()
+    layout()
+    showing()
+
   frame.idExit do (): frame.close()
 
 
@@ -257,6 +263,9 @@ proc layout() =
 
   elif menu.isChecked(idMainMenu):
     panel.autolayout(screen_layout.get_string("MainMenu"))
+
+  elif menu.isChecked(idDifMenu):
+    panel.autolayout(screen_layout.get_string("DifMenu"))
 
   for child in getChildren(panel):
     setFont(child, Font(font_size))
@@ -342,12 +351,16 @@ proc event() =
       now_state = stDifMenu
 
       selected_genre = uint8(genre_list.getSelection())
+      echo("SelectedGenre:" & $genre_list.getSelection())
+
 
     of stDifMenu:
       now_state = stQuiz
       
       selected_difficulty = uint8(difficulty_list.getSelection())
+      echo("SelectedDifficulty:" & $difficulty_list.getSelection())
       quiz_quantity = uint8(quiz_qtyspinctrl.getValue())
+      echo("Quiz_Quantity:" & $quiz_qtyspinctrl.getValue())
 
       for quiz_row in get_quiz_data(uint8(selected_genre), uint8(selected_difficulty), quiz_quantity):
         var

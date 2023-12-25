@@ -16,19 +16,22 @@ proc get_string*(Layout_State: string): string =
         V:[Options:[detail]-[graphic_setting(font_setting,sound_setting,credit,10%)]-[font_setting]-[sound_setting]-[credit]]
         
         H:[Fooder:~[next(20%)]]"""
+
   of "DifMenu":
     layout_string = "spacing: " & $space & """
         H:|-(10%)-[Header]-(10%)-|
-        H:|-(10%)-[Genres(50%)]-[Options]-(10%)-|
+        H:|-(10%)-[Quiz_Qty]-(10%)-|
+        H:|-(10%)-[Options]-(10%)-|
         H:|-(10%)-[Fooder]-(10%)-|
-        V:|-[Header(10%)]-[Genres,Options]-[Fooder(10%)]-|
-        
-        H:[Header:[title]]
-        
-        V:[Genres:[genre_list]]
-        V:[Options:[detail]-[graphic_setting(font_setting,sound_setting,credit,10%)]-[font_setting]-[sound_setting]-[credit]]
-        
-        H:[Fooder:~[next(20%)]]"""
+        V:|-[Header(10%)]-[Quiz_Qty(10%)]-[Options]-[Fooder(10%)]-|
+
+        H:[Header:-[title(80%)]-]
+
+        H:[Quiz_Qty:[detail(20%)]-[quiz_qtyspinctrl]]
+        H:[Options:[difficulty_list]]
+
+        H:[Fooder:[prev(20%)]~[next(20%)]]"""
+
   of "TwoChoice":
     layout_string = "spacing: " & $space & """
         H:|-(10%)-[Header]-(10%)-|
