@@ -44,7 +44,32 @@ when isMainModule:
 
 
 #################################################
-#変数宣言
+#   構造体定義
+#################################################
+type
+    MenuID = enum
+      idTwoChoice = wIdUser, idManualChoice, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idExit
+
+    MenuState = enum
+      stMainMenu = 1
+      stSetting = 2
+      stCredit = 3
+      stDifMenu = 4
+      stQuiz = 5
+      stSingleResult = 6
+      stAllResult = 7
+
+    QuizData {.pure.} = object
+      title: string
+      question: string
+      correct_option: string
+      option_array: seq[string]
+      detail: string
+      result: bool
+
+
+#################################################
+#   変数宣言
 #################################################
 var
   app: wApp
@@ -57,6 +82,7 @@ var
   title: wStaticText
   genre_list: wListBox
   difficulty_list: wListBox
+  quiz_qtyspinctrl: wSpinCtrl
   detail: wTextCtrl
   graphic_setting: wButton
   font_setting: wButton
@@ -79,8 +105,13 @@ var
   genre_table: seq[seq[string]]
   difficulty_table: seq[seq[string]]
 
-type
-    MenuID = enum idTwoChoice = wIdUser, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idExit
+  selected_genre: uint8
+  selected_difficulty: uint8
+  quiz_quantity: uint8
+
+  quiz_data:seq[QuizData]
+
+  now_state: MenuState
 
 
 #################################################
@@ -95,6 +126,7 @@ proc assignment() =
   menubar = MenuBar(frame)
 
   menu = Menu(menubar, "layout")
+  menu.appendRadioItem(idManualChoice, "ManualChoice")
   menu.appendRadioItem(idTwoChoice, "TwoChoice")
   menu.appendRadioItem(idThreeChoice, "ThreeChoice")
   menu.appendRadioItem(idFourChoice, "FourChoice")
@@ -106,6 +138,7 @@ proc assignment() =
   title = StaticText(panel, label="MainMenu", style=(wAlignCenter + wAlignMiddle))
   genre_list = ListBox(panel, style=(wLbSingle))
   difficulty_list = ListBox(panel, style=(wLbSingle))
+  quiz_qtyspinctrl = SpinCtrl(panel, value=10)
   detail = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
   graphic_setting = Button(panel, label="Graphic")
   font_setting = Button(panel, label="Font")
@@ -122,7 +155,7 @@ proc assignment() =
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
 
-
+  now_state = stMainMenu
 
   genre_table = get_genre_info()
 
@@ -163,6 +196,12 @@ proc window_close() =
 #   レイアウト変更時処理
 #################################################
 proc layout_change() =
+  frame.idManualChoice do ():
+    reset_position()
+    choice_quiz_store()
+    layout()
+    showing()
+
   frame.idTwoChoice do ():
     reset_position()
     choice_quiz_store()
@@ -198,9 +237,13 @@ proc layout_change() =
 #   通常処理
 #################################################
 proc layout() =
-  var font_size = (frame.getsize.width + frame.getsize.height)/200
+  var
+    font_size: float32 = (frame.getsize.width + frame.getsize.height)/200
 
-  if menu.isChecked(idTwoChoice):
+  if menu.isChecked(idManualChoice):
+    panel.autolayout(screen_layout.get_string("DifMenu"))
+
+  elif menu.isChecked(idTwoChoice):
     panel.autolayout(screen_layout.get_string("TwoChoice"))
 
   elif menu.isChecked(idThreeChoice):
@@ -234,7 +277,7 @@ proc choice_quiz_store() =
     quiz_data: seq[string]
     option_array: seq[string]
 
-  quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)), 1)
+  quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)), 1)[0]
 
   setTitle(title, quiz_data[1])
   setTitle(genre, quiz_data[2])
@@ -270,6 +313,7 @@ proc event() =
 
   genre_list.wEvent_ListBox do ():
     echo("SelectedItem" & $genre_list.getSelection())
+    setTitle(detail, genre_table[genre_list.getSelection()][1])
 
   option1.wEvent_Button do ():
     selected_option = getTitle(option1)
@@ -289,22 +333,45 @@ proc event() =
 
   prev.wEvent_Button do ():
     echo("戻る")
-
-    for child in getChildren(panel):
-      if getPosition(child).x == 0:
-        show(child)
   
   next.wEvent_Button do ():
     echo("決定")
 
-    for child in getChildren(panel):
-      if getPosition(child).x == 0:
-        hide(child)
+    case now_state
+    of stMainMenu:
+      now_state = stDifMenu
 
-    if correct_answer == selected_option:
-      echo("correct")
-      setValue(question, value="正解！")
+      selected_genre = uint8(genre_list.getSelection())
+
+    of stDifMenu:
+      now_state = stQuiz
+      
+      selected_difficulty = uint8(difficulty_list.getSelection())
+      quiz_quantity = uint8(quiz_qtyspinctrl.getValue())
+
+      for quiz_row in get_quiz_data(uint8(selected_genre), uint8(selected_difficulty), quiz_quantity):
+        var
+          row_data: QuizData
+
+        row_data.title = quiz_row[1]
+        row_data.question = quiz_row[5]
+        row_data.correct_option = quiz_row[6]
+        row_data.option_array = @[quiz_row[6],quiz_row[7],quiz_row[8],quiz_row[9]]
+        row_data.detail = quiz_row[10]
+        row_data.result = false
+
+        quiz_data.add(row_data)
+
+      echo(quiz_data)
+
+    of stQuiz:
+      if correct_answer == selected_option:
+        echo("correct")
+        setValue(question, value="正解！")
+
+      else:
+        echo("incorrect")
+        setValue(question, value="不正解！")
 
     else:
-      echo("incorrect")
-      setValue(question, value="不正解！")
+      echo("else")

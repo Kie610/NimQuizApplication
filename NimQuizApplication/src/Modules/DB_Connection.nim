@@ -89,8 +89,8 @@ proc get_Difficulty_info*(): seq[seq[string]] =
 #################################################
 #   クイズ情報取得
 #################################################
-proc get_quiz_data*(genre: uint8, difficulty: uint8, quiz_quantity: uint8): seq[string] =
-  var quiz_data: seq[string]
+proc get_quiz_data*(genre: uint8, difficulty: uint8, quiz_quantity: uint8): seq[seq[string]] =
+  var quiz_data: seq[seq[string]]
 
   var
     sql1: string
@@ -130,7 +130,7 @@ proc get_quiz_data*(genre: uint8, difficulty: uint8, quiz_quantity: uint8): seq[
     ORDER BY RANDOM()
     LIMIT """
 
-  quiz_data = db.getRow(sql(sql1 & $genre & sql2 & $difficulty & sql3 & $quiz_quantity))
+  quiz_data = db.getAllRows(sql(sql1 & $genre & sql2 & $difficulty & sql3 & $quiz_quantity))
 
   echo(quiz_data)
   
