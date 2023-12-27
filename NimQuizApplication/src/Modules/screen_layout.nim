@@ -1,10 +1,15 @@
-proc get_string*(Layout_State: string): string =
-  var space: uint8 = 8
-  var layout_string: string
+import public_variables
 
-  case Layout_State
+proc get_string*(menu: MenuState, quiz_kinds: string = ""): string =
+  var menu_string: string
+  var layout_string: string
+  
+  menu_string = $menu & quiz_kinds
+  layout_string = "spacing: 8"
+
+  case menu_string
   of "MainMenu":
-    layout_string = "spacing: " & $space & """
+    layout_string = layout_string & """
         H:|-(10%)-[Header]-(10%)-|
         H:|-(10%)-[Genres(50%)]-[Options]-(10%)-|
         H:|-(10%)-[Fooder]-(10%)-|
@@ -17,8 +22,13 @@ proc get_string*(Layout_State: string): string =
         
         H:[Fooder:~[next(20%)]]"""
 
+  of "Setting":
+    layout_string = layout_string & """
+        H:|-[title]-|
+        V:|-[title]-|"""
+
   of "DifMenu":
-    layout_string = "spacing: " & $space & """
+    layout_string = layout_string & """
         H:|-(10%)-[Header]-(10%)-|
         H:|-(10%)-[Quiz_Qty]-(10%)-|
         H:|-(10%)-[Options]-(10%)-|
@@ -32,8 +42,8 @@ proc get_string*(Layout_State: string): string =
 
         H:[Fooder:[prev(20%)]~[next(20%)]]"""
 
-  of "TwoChoice":
-    layout_string = "spacing: " & $space & """
+  of "Quiz2択問題":
+    layout_string = layout_string & """
         H:|-(10%)-[Header]-(10%)-|
         H:|-(20%)-[Question]-(20%)-|
         H:|-(10%)-[Options]-(10%)-|
@@ -47,8 +57,8 @@ proc get_string*(Layout_State: string): string =
 
         H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
 
-  of "ThreeChoice":
-    layout_string = "spacing: " & $space & """
+  of "Quiz3択問題":
+    layout_string = layout_string & """
         H:|-(10%)-[Header]-(10%)-|
         H:|-(20%)-[Question]-(20%)-|
         H:|-(10%)-[Options]-(10%)-|
@@ -62,8 +72,8 @@ proc get_string*(Layout_State: string): string =
 
         H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
 
-  of "FourChoice":
-    layout_string = "spacing: " & $space & """
+  of "Quiz4択問題":
+    layout_string = layout_string & """
         H:|-(10%)-[Header]-(10%)-|
         H:|-(20%)-[Question]-(20%)-|
         H:|-(10%)-[Options]-(10%)-|
@@ -80,8 +90,18 @@ proc get_string*(Layout_State: string): string =
 
         H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
 
+  of "sResult":
+    layout_string = layout_string & """
+        H:|-[title]-|
+        V:|-[title]-|"""
+
+  of "aResult":
+    layout_string = layout_string & """
+        H:|-[title]-|
+        V:|-[title]-|"""
+
   else:
-    layout_string = "spacing: " & $space & """
+    layout_string = layout_string & """
         H:|-[title]-|
         V:|-[title]-|"""
 

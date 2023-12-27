@@ -8,7 +8,7 @@ import wNim
 #################################################
 #モジュールのインポート
 #################################################
-import Modules/[screen_layout, Sound, DB_Connection]
+import Modules/[public_variables, screen_layout, Sound, DB_Connection]
 
 
 #################################################
@@ -20,7 +20,7 @@ proc window_close()
 proc layout_change()
 proc reset_position()
 proc choice_quiz_store()
-proc layout()
+proc layout(state: MenuState, quiz_genre: string = "")
 proc showing()
 proc event()
 
@@ -48,18 +48,9 @@ when isMainModule:
 #################################################
 type
     MenuID = enum
-      idTwoChoice = wIdUser, idManualChoice, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idDifMenu, idExit
+      idTwoChoice = wIdUser, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idDifMenu, idExit
 
-    MenuState = enum
-      stMainMenu = 1
-      stSetting = 2
-      stCredit = 3
-      stDifMenu = 4
-      stQuiz = 5
-      stSingleResult = 6
-      stAllResult = 7
-
-    QuizData {.pure.} = object
+    QuizData = object
       title: string
       question: string
       correct_option: string
@@ -126,7 +117,6 @@ proc assignment() =
   menubar = MenuBar(frame)
 
   menu = Menu(menubar, "layout")
-  menu.appendRadioItem(idManualChoice, "ManualChoice")
   menu.appendRadioItem(idTwoChoice, "TwoChoice")
   menu.appendRadioItem(idThreeChoice, "ThreeChoice")
   menu.appendRadioItem(idFourChoice, "FourChoice")
@@ -175,7 +165,7 @@ proc assignment() =
 proc main_loop() =
   reset_position()
   layout_change()
-  layout()
+  layout(now_state)
   showing()
   event()
   frame.center()
@@ -197,43 +187,37 @@ proc window_close() =
 #   レイアウト変更時処理
 #################################################
 proc layout_change() =
-  frame.idManualChoice do ():
-    reset_position()
-    choice_quiz_store()
-    layout()
-    showing()
-
   frame.idTwoChoice do ():
     reset_position()
     choice_quiz_store()
-    layout()
+    layout(stQuiz, "2択問題")
     showing()
 
   frame.idThreeChoice do ():
     reset_position()
     choice_quiz_store()
-    layout()
+    layout(stQuiz, "3択問題")
     showing()
 
   frame.idFourChoice do ():
     reset_position()
     choice_quiz_store()
-    layout()
+    layout(stQuiz, "4択問題")
     showing()
 
   frame.idOnlyTitle do ():
     reset_position()
-    layout()
+    layout(stDefault)
     showing()
 
   frame.idMainMenu do ():
     reset_position()
-    layout()
+    layout(stMainMenu)
     showing()
 
   frame.idDifMenu do ():
     reset_position()
-    layout()
+    layout(stDifMenu)
     showing()
 
   frame.idExit do (): frame.close()
@@ -242,30 +226,28 @@ proc layout_change() =
 #################################################
 #   通常処理
 #################################################
-proc layout() =
-  var
-    font_size: float32 = (frame.getsize.width + frame.getsize.height)/200
+proc layout(state: MenuState, quiz_genre: string = "") =
 
-  if menu.isChecked(idManualChoice):
-    panel.autolayout(screen_layout.get_string("DifMenu"))
-
-  elif menu.isChecked(idTwoChoice):
-    panel.autolayout(screen_layout.get_string("TwoChoice"))
+  if menu.isChecked(idTwoChoice):
+    panel.autolayout(screen_layout.get_string(stQuiz, "2択問題"))
 
   elif menu.isChecked(idThreeChoice):
-    panel.autolayout(screen_layout.get_string("ThreeChoice"))
+    panel.autolayout(screen_layout.get_string(stQuiz, "3択問題"))
 
   elif menu.isChecked(idFourChoice):
-    panel.autolayout(screen_layout.get_string("FourChoice"))
+    panel.autolayout(screen_layout.get_string(stQuiz, "4択問題"))
 
   elif menu.isChecked(idOnlyTitle):
-    panel.autolayout(screen_layout.get_string("default"))
+    panel.autolayout(screen_layout.get_string(stDefault))
 
   elif menu.isChecked(idMainMenu):
-    panel.autolayout(screen_layout.get_string("MainMenu"))
+    panel.autolayout(screen_layout.get_string(stMainMenu))
 
   elif menu.isChecked(idDifMenu):
-    panel.autolayout(screen_layout.get_string("DifMenu"))
+    panel.autolayout(screen_layout.get_string(stDifMenu))
+
+  var
+    font_size: float32 = (frame.getsize.width + frame.getsize.height)/200
 
   for child in getChildren(panel):
     setFont(child, Font(font_size))
@@ -313,7 +295,7 @@ proc choice_quiz_store() =
 #################################################
 proc event() =
   panel.wEvent_Size do ():
-    layout()
+    layout(now_state)
 
   panel.wEvent_KeyDown do (event: wEvent):
     echo("panelKeyEvent")
