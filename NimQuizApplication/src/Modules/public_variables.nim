@@ -11,4 +11,3 @@ type
       stSingleResult = "sResult"
       stAllResult = "aResult"
       stDefault = "Default"
-

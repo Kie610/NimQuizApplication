@@ -17,10 +17,9 @@ import Modules/[public_variables, screen_layout, Sound, DB_Connection]
 proc main_loop()
 proc assignment()
 proc window_close()
-proc layout_change()
 proc reset_position()
-proc choice_quiz_store()
-proc layout(state: MenuState, quiz_genre: string = "")
+proc set_quiz_data(quiz_number: int)
+proc layout(state: MenuState, quiz_genre: string = "", quiz_number: int = -1)
 proc showing()
 proc event()
 
@@ -47,11 +46,11 @@ when isMainModule:
 #   構造体定義
 #################################################
 type
-    MenuID = enum
-      idTwoChoice = wIdUser, idThreeChoice, idFourChoice, idOnlyTitle, idMainMenu, idDifMenu, idExit
-
     QuizData = object
       title: string
+      genre_name: string
+      genre_option_count: int
+      difficulty_name: string
       question: string
       correct_option: string
       option_array: seq[string]
@@ -67,8 +66,6 @@ var
   frame: wFrame
   panel: wPanel
   menubar: wMenuBar
-
-  menu: wMenu
 
   title: wStaticText
   genre_list: wListBox
@@ -96,9 +93,11 @@ var
   genre_table: seq[seq[string]]
   difficulty_table: seq[seq[string]]
 
-  selected_genre: uint8
-  selected_difficulty: uint8
-  quiz_quantity: uint8
+  selected_genre: int
+  selected_genre_name: string
+  selected_difficulty: int
+  selected_difficulty_name: string
+  quiz_quantity: int
 
   quiz_data:seq[QuizData]
 
@@ -115,16 +114,6 @@ proc assignment() =
   frame = Frame(title=Title, size=(1280, 720))
   panel = Panel(frame, style=wDoubleBuffered)
   menubar = MenuBar(frame)
-
-  menu = Menu(menubar, "layout")
-  menu.appendRadioItem(idTwoChoice, "TwoChoice")
-  menu.appendRadioItem(idThreeChoice, "ThreeChoice")
-  menu.appendRadioItem(idFourChoice, "FourChoice")
-  menu.appendRadioItem(idOnlyTitle, "OnlyTitle").check()
-  menu.appendRadioItem(idMainMenu, "MainMenu")
-  menu.appendRadioItem(idDifMenu, "DifMenu")
-  menu.appendSeparator()
-  menu.append(idExit, "Exit")
 
   title = StaticText(panel, label="MainMenu", style=(wAlignCenter + wAlignMiddle))
   genre_list = ListBox(panel, style=(wLbSingle))
@@ -146,7 +135,7 @@ proc assignment() =
   prev = Button(panel, label="prev")
   next = Button(panel, label="next")
 
-  now_state = stMainMenu
+  now_state = stDefault
 
   genre_table = get_genre_info()
 
@@ -164,8 +153,7 @@ proc assignment() =
 #################################################
 proc main_loop() =
   reset_position()
-  layout_change()
-  layout(now_state)
+  layout(stMainMenu)
   showing()
   event()
   frame.center()
@@ -184,67 +172,52 @@ proc window_close() =
 
 
 #################################################
-#   レイアウト変更時処理
-#################################################
-proc layout_change() =
-  frame.idTwoChoice do ():
-    reset_position()
-    choice_quiz_store()
-    layout(stQuiz, "2択問題")
-    showing()
-
-  frame.idThreeChoice do ():
-    reset_position()
-    choice_quiz_store()
-    layout(stQuiz, "3択問題")
-    showing()
-
-  frame.idFourChoice do ():
-    reset_position()
-    choice_quiz_store()
-    layout(stQuiz, "4択問題")
-    showing()
-
-  frame.idOnlyTitle do ():
-    reset_position()
-    layout(stDefault)
-    showing()
-
-  frame.idMainMenu do ():
-    reset_position()
-    layout(stMainMenu)
-    showing()
-
-  frame.idDifMenu do ():
-    reset_position()
-    layout(stDifMenu)
-    showing()
-
-  frame.idExit do (): frame.close()
-
-
-#################################################
 #   通常処理
 #################################################
-proc layout(state: MenuState, quiz_genre: string = "") =
+proc layout(state: MenuState, quiz_genre: string = "", quiz_number: int = -1) =  
+  if state != now_state:
+    reset_position()
+    if quiz_number != -1:
+      set_quiz_data(quiz_number)
 
-  if menu.isChecked(idTwoChoice):
-    panel.autolayout(screen_layout.get_string(stQuiz, "2択問題"))
-
-  elif menu.isChecked(idThreeChoice):
-    panel.autolayout(screen_layout.get_string(stQuiz, "3択問題"))
-
-  elif menu.isChecked(idFourChoice):
-    panel.autolayout(screen_layout.get_string(stQuiz, "4択問題"))
-
-  elif menu.isChecked(idOnlyTitle):
-    panel.autolayout(screen_layout.get_string(stDefault))
-
-  elif menu.isChecked(idMainMenu):
+  case state
+  of stMainMenu:
+    assignment()
     panel.autolayout(screen_layout.get_string(stMainMenu))
 
-  elif menu.isChecked(idDifMenu):
+  of stSetting:
+    panel.autolayout(screen_layout.get_string(stSetting))
+    
+  of stCredit:
+    panel.autolayout(screen_layout.get_string(stCredit))
+    
+  of stDifMenu:
     panel.autolayout(screen_layout.get_string(stDifMenu))
+    
+  of stQuiz:
+    case quiz_genre
+    of "2択問題":
+      panel.autolayout(screen_layout.get_string(stQuiz, "2択問題"))
+    
+    of "3択問題":
+      panel.autolayout(screen_layout.get_string(stQuiz, "3択問題"))
+
+    of "4択問題":
+      panel.autolayout(screen_layout.get_string(stQuiz, "4択問題"))
+    
+  of stSingleResult:
+    panel.autolayout(screen_layout.get_string(stSingleResult))
+    
+  of stAllResult:
+    panel.autolayout(screen_layout.get_string(stAllResult))
+    
+  else:
+    panel.autolayout(screen_layout.get_string(stDefault))
+    
+  if state != now_state:
+    showing()
+
+  now_state = state
 
   var
     font_size: float32 = (frame.getsize.width + frame.getsize.height)/200
@@ -263,31 +236,30 @@ proc showing() =
     else:
       show(child)
 
-proc choice_quiz_store() =
+proc set_quiz_data(quiz_number: int) =
   var
-    quiz_data: seq[string]
+    option_count: int = quiz_data[quiz_number].genre_option_count
     option_array: seq[string]
 
-  quiz_data = get_quiz_data(uint8(rand(1..3)), uint8(rand(1..4)), 1)[0]
+  setTitle(title, quiz_data[quiz_number].title)
+  setTitle(genre, quiz_data[quiz_number].genre_name)
+  setTitle(question, quiz_data[quiz_number].question)
 
-  setTitle(title, quiz_data[1])
-  setTitle(genre, quiz_data[2])
-  setTitle(question, quiz_data[5])
-
-  for i in countup(6, 6 + parseInt(quiz_data[3]) - 1):
-    option_array.add(quiz_data[i])
+  for i in countup(0, 0 + option_count - 1):
+    option_array.add(quiz_data[quiz_number].option_array[i])
 
   shuffle(option_array)
 
-  for i in countup(6 + parseInt(quiz_data[3]), 6 + 4 - 1):
+  for i in countup(0 + option_count, 0 + 4 - 1):
     option_array.add("")
 
   setTitle(option1, option_array[0])
   setTitle(option2, option_array[1])
   setTitle(option3, option_array[2])
   setTitle(option4, option_array[3])
+  echo(option_array)
 
-  correct_answer = quiz_data[6]
+  correct_answer = quiz_data[quiz_number].correct_option
 
 
 #################################################
@@ -304,7 +276,12 @@ proc event() =
 
   genre_list.wEvent_ListBox do ():
     echo("SelectedItem" & $genre_list.getSelection())
+    echo("SelectedItemName" & genre_list.getText(genre_list.getSelection()))
     setTitle(detail, genre_table[genre_list.getSelection()][1])
+  
+  difficulty_list.wEvent_ListBox do ():
+    echo("SelectedItem" & $difficulty_list.getSelection())
+    echo("SelectedItemName" & difficulty_list.getText(difficulty_list.getSelection()))
 
   option1.wEvent_Button do ():
     selected_option = getTitle(option1)
@@ -330,25 +307,32 @@ proc event() =
 
     case now_state
     of stMainMenu:
-      now_state = stDifMenu
+      selected_genre = genre_list.getSelection() + 1
+      echo("SelectedGenre:" & $selected_genre)
 
-      selected_genre = uint8(genre_list.getSelection())
-      echo("SelectedGenre:" & $genre_list.getSelection())
+      selected_genre_name = genre_list.getText(genre_list.getSelection())
+      echo(selected_genre_name)
 
+      layout(stDifMenu)
 
     of stDifMenu:
-      now_state = stQuiz
-      
-      selected_difficulty = uint8(difficulty_list.getSelection())
-      echo("SelectedDifficulty:" & $difficulty_list.getSelection())
-      quiz_quantity = uint8(quiz_qtyspinctrl.getValue())
+      selected_difficulty = difficulty_list.getSelection() + 1
+      echo("SelectedDifficulty:" & $selected_difficulty)
+
+      selected_difficulty_name = difficulty_list.getText(difficulty_list.getSelection())
+      echo(selected_difficulty_name)
+
+      quiz_quantity = quiz_qtyspinctrl.getValue()
       echo("Quiz_Quantity:" & $quiz_qtyspinctrl.getValue())
 
-      for quiz_row in get_quiz_data(uint8(selected_genre), uint8(selected_difficulty), quiz_quantity):
+      for quiz_row in get_quiz_data(selected_genre, selected_difficulty, quiz_quantity):
         var
           row_data: QuizData
 
         row_data.title = quiz_row[1]
+        row_data.genre_name = quiz_row[2]
+        row_data.genre_option_count = parseInt(quiz_row[3])
+        row_data.difficulty_name = quiz_row[4]
         row_data.question = quiz_row[5]
         row_data.correct_option = quiz_row[6]
         row_data.option_array = @[quiz_row[6],quiz_row[7],quiz_row[8],quiz_row[9]]
@@ -359,14 +343,33 @@ proc event() =
 
       echo(quiz_data)
 
+      layout(stQuiz, selected_genre_name, 0)
+
     of stQuiz:
+      layout(stSingleResult)
+
       if correct_answer == selected_option:
         echo("correct")
-        setValue(question, value="正解！")
+        setTitle(title, "正解！")
 
       else:
         echo("incorrect")
-        setValue(question, value="不正解！")
+        setTitle(title, "不正解！")
+
+    of stSingleResult:
+      layout(stAllResult)
+
+      if correct_answer == selected_option:
+        echo("correct")
+        setTitle(title, "正解！")
+
+      else:
+        echo("incorrect")
+        setTitle(title, "不正解！")
+
+    of stAllResult:
+      layout(stMainMenu)
+
 
     else:
       echo("else")

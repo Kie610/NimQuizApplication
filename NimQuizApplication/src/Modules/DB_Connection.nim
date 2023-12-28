@@ -1,7 +1,6 @@
 #################################################
 #   ライブラリのインポート
 #################################################
-import std/random
 import db_connector/db_sqlite
 
 
@@ -9,7 +8,6 @@ import db_connector/db_sqlite
 #   変数宣言
 #################################################
 var db: DbConn
-randomize()
 
 
 #################################################
@@ -89,7 +87,7 @@ proc get_Difficulty_info*(): seq[seq[string]] =
 #################################################
 #   クイズ情報取得
 #################################################
-proc get_quiz_data*(genre: uint8, difficulty: uint8, quiz_quantity: uint8): seq[seq[string]] =
+proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[seq[string]] =
   var quiz_data: seq[seq[string]]
 
   var
