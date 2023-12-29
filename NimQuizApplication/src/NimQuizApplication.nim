@@ -285,13 +285,15 @@ proc event() =
     echo($event.getKeyStatus)
 
   genre_list.wEvent_ListBox do ():
-    echo("SelectedItem" & $genre_list.getSelection())
-    echo("SelectedItemName" & genre_list.getText(genre_list.getSelection()))
-    setTitle(detail, genre_table[genre_list.getSelection()][1])
+    if genre_list.getSelection() >= 0:
+      echo("SelectedItem" & $genre_list.getSelection())
+      echo("SelectedItemName" & genre_list.getText(genre_list.getSelection()))
+      setTitle(detail, genre_table[genre_list.getSelection()][1])
   
   difficulty_list.wEvent_ListBox do ():
-    echo("SelectedItem" & $difficulty_list.getSelection())
-    echo("SelectedItemName" & difficulty_list.getText(difficulty_list.getSelection()))
+    if difficulty_list.getSelection() >= 0:
+      echo("SelectedItem" & $difficulty_list.getSelection())
+      echo("SelectedItemName" & difficulty_list.getText(difficulty_list.getSelection()))
 
   option1.wEvent_Button do ():
     selected_option = getTitle(option1)
