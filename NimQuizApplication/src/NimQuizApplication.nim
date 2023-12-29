@@ -182,7 +182,6 @@ proc layout(state: MenuState, quiz_genre: string = "", quiz_number: int = -1) =
 
   case state
   of stMainMenu:
-    assignment()
     panel.autolayout(screen_layout.get_string(stMainMenu))
 
   of stSetting:
