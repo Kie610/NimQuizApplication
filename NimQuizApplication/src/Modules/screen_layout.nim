@@ -55,7 +55,7 @@ proc get_string*(menu: MenuState, quiz_kinds: string = ""): string =
         H:[Question:[question]]
         H:[Options:[option1(option2)]-[option2]]
 
-        H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
+        H:[Fooder:-(20%)-[genre]-[next(20%)]]"""
 
   of "Quiz3択問題":
     layout_string = layout_string & """
@@ -70,7 +70,7 @@ proc get_string*(menu: MenuState, quiz_kinds: string = ""): string =
         H:[Question:[question]]
         H:[Options:[option1(option2,option3)]-[option2]-[option3]]
 
-        H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
+        H:[Fooder:-(20%)-[genre]-[next(20%)]]"""
 
   of "Quiz4択問題":
     layout_string = layout_string & """
@@ -88,17 +88,27 @@ proc get_string*(menu: MenuState, quiz_kinds: string = ""): string =
         V:[OptionsL:[option1(option3)]-[option3]]
         V:[OptionsR:[option2(option4)]-[option4]]
 
-        H:[Fooder:[prev(20%)]-[genre]-[next(20%)]]"""
+        H:[Fooder:-(20%)-[genre]-[next(20%)]]"""
 
   of "sResult":
     layout_string = layout_string & """
-        H:|-[title]-|
-        V:|-[title]-|"""
+        H:|-(20%)-[Question]-(20%)-|
+        H:|-(10%)-[Fooder]-(10%)-|
+        V:|-(10%)-[Question]-[Fooder(10%)]-|
+
+        H:[Question:[title]]
+
+        H:[Fooder:-[prev(20%)]-[genre]-[next(20%)]]"""
 
   of "aResult":
     layout_string = layout_string & """
-        H:|-[title]-|
-        V:|-[title]-|"""
+        H:|-(20%)-[Question]-(20%)-|
+        H:|-(10%)-[Fooder]-(10%)-|
+        V:|-(10%)-[Question]-[Fooder(10%)]-|
+        
+        H:[Question:[title]]
+        
+        H:[Fooder:-[prev(20%)]-[genre]-[next(20%)]]"""
 
   else:
     layout_string = layout_string & """

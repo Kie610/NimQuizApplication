@@ -18,6 +18,7 @@ proc main_loop()
 proc assignment()
 proc window_close()
 proc reset_position()
+proc quiz_reset()
 proc set_quiz_data(quiz_number: int)
 proc layout(state: MenuState, quiz_genre: string = "", quiz_number: int = -1)
 proc showing()
@@ -56,6 +57,7 @@ type
       option_array: seq[string]
       detail: string
       result: bool
+      done: bool
 
 
 #################################################
@@ -100,6 +102,7 @@ var
   quiz_quantity: int
 
   quiz_data:seq[QuizData]
+  quiz_progress: int
 
   now_state: MenuState
 
@@ -147,11 +150,25 @@ proc assignment() =
   for row in difficulty_table:
     difficulty_list.append(row[0])
 
+proc quiz_reset() =
+  selected_option = ""
+  correct_answer = ""
+
+  selected_genre = 0
+  selected_genre_name = ""
+  selected_difficulty = 0
+  selected_difficulty_name = ""
+  quiz_quantity = 0
+
+  quiz_data = newSeq[QuizData]()
+  quiz_progress = 0
+
 
 #################################################
 #   メインプロシージャ
 #################################################
 proc main_loop() =
+  quiz_reset()
   reset_position()
   layout(stMainMenu)
   showing()
@@ -177,6 +194,8 @@ proc window_close() =
 proc layout(state: MenuState, quiz_genre: string = "", quiz_number: int = -1) =  
   if state != now_state:
     reset_position()
+    if state == stMainMenu:
+      quiz_reset()
     if quiz_number != -1:
       set_quiz_data(quiz_number)
 
@@ -236,27 +255,15 @@ proc showing() =
       show(child)
 
 proc set_quiz_data(quiz_number: int) =
-  var
-    option_count: int = quiz_data[quiz_number].genre_option_count
-    option_array: seq[string]
-
   setTitle(title, quiz_data[quiz_number].title)
   setTitle(genre, quiz_data[quiz_number].genre_name)
   setTitle(question, quiz_data[quiz_number].question)
 
-  for i in countup(0, 0 + option_count - 1):
-    option_array.add(quiz_data[quiz_number].option_array[i])
-
-  shuffle(option_array)
-
-  for i in countup(0 + option_count, 0 + 4 - 1):
-    option_array.add("")
-
-  setTitle(option1, option_array[0])
-  setTitle(option2, option_array[1])
-  setTitle(option3, option_array[2])
-  setTitle(option4, option_array[3])
-  echo(option_array)
+  setTitle(option1, quiz_data[quiz_number].option_array[0])
+  setTitle(option2, quiz_data[quiz_number].option_array[1])
+  setTitle(option3, quiz_data[quiz_number].option_array[2])
+  setTitle(option4, quiz_data[quiz_number].option_array[3])
+  echo(quiz_data[quiz_number].option_array)
 
   correct_answer = quiz_data[quiz_number].correct_option
 
@@ -300,6 +307,16 @@ proc event() =
 
   prev.wEvent_Button do ():
     echo("戻る")
+
+    case now_state
+    of stDifMenu:
+      layout(stMainMenu)
+      
+    of stSingleResult:
+      layout(stQuiz, selected_genre_name, quiz_progress)
+
+    else:
+      echo("nothing")
   
   next.wEvent_Button do ():
     echo("決定")
@@ -311,6 +328,8 @@ proc event() =
 
       selected_genre_name = genre_list.getText(genre_list.getSelection())
       echo(selected_genre_name)
+
+      setTitle(detail, "問題数")
 
       layout(stDifMenu)
 
@@ -334,37 +353,86 @@ proc event() =
         row_data.difficulty_name = quiz_row[4]
         row_data.question = quiz_row[5]
         row_data.correct_option = quiz_row[6]
-        row_data.option_array = @[quiz_row[6],quiz_row[7],quiz_row[8],quiz_row[9]]
+
+        var
+          option_count: int = parseInt(quiz_row[3])
+          option_array: seq[string]
+
+        for i in countup(6, 6 + option_count - 1):
+          option_array.add(quiz_row[i])
+
+        shuffle(option_array)
+
+        for i in countup(6 + option_count, 6 + 4 - 1):
+          option_array.add("")
+
+        setTitle(option1, option_array[0])
+        setTitle(option2, option_array[1])
+        setTitle(option3, option_array[2])
+        setTitle(option4, option_array[3])
+        echo(option_array)
+
+        row_data.option_array = @[option_array[0], option_array[1], option_array[2], option_array[3]]
         row_data.detail = quiz_row[10]
         row_data.result = false
+        row_data.done = false
 
         quiz_data.add(row_data)
 
       echo(quiz_data)
-
-      layout(stQuiz, selected_genre_name, 0)
+      
+      layout(stQuiz, selected_genre_name, quiz_progress)
+      quiz_progress = 0
 
     of stQuiz:
       layout(stSingleResult)
 
-      if correct_answer == selected_option:
-        echo("correct")
-        setTitle(title, "正解！")
+      if quiz_data[quiz_progress].done == false:
+        quiz_data[quiz_progress].done = true
+        echo(quiz_data[quiz_progress].title & $quiz_data[quiz_progress].done)
 
+        if quiz_data[quiz_progress].correct_option == selected_option:
+          echo("correct")
+          setTitle(title, "正解！")
+          quiz_data[quiz_progress].result = true
+
+        else:
+          echo("incorrect")
+          setTitle(title, "不正解！")
+          quiz_data[quiz_progress].result = false
+        
       else:
-        echo("incorrect")
-        setTitle(title, "不正解！")
+        if quiz_data[quiz_progress].result:
+          echo("correct")
+          setTitle(title, "正解！")
+
+        else:
+          echo("incorrect")
+          setTitle(title, "不正解！")
 
     of stSingleResult:
-      layout(stAllResult)
-
-      if correct_answer == selected_option:
-        echo("correct")
-        setTitle(title, "正解！")
-
+      if quiz_progress + 1 < quiz_quantity:
+        echo($(quiz_progress + 1) & " : " & $quiz_quantity)
+        layout(stQuiz, selected_genre_name, quiz_progress)
+        quiz_progress = quiz_progress + 1
+      
       else:
-        echo("incorrect")
-        setTitle(title, "不正解！")
+        var
+          correct_count: int = 0
+          all_result: string
+        
+        for correction in quiz_data:
+          echo("result" & $correction.result)
+          if correction.result == true:
+            correct_count = correct_count + 1
+
+          echo($correct_count & " / " & $quiz_quantity)
+        
+        all_result = $correct_count & " / " & $quiz_quantity
+
+        setTitle(title, all_result)
+        layout(stAllResult)
+
 
     of stAllResult:
       layout(stMainMenu)
