@@ -122,6 +122,7 @@ proc assignment() =
   genre_list = ListBox(panel, style=(wLbSingle))
   difficulty_list = ListBox(panel, style=(wLbSingle))
   quiz_qtyspinctrl = SpinCtrl(panel, value=10)
+  quiz_qtyspinctrl.setRange(min=1, max=100)
   detail = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
   graphic_setting = Button(panel, label="Graphic")
   font_setting = Button(panel, label="Font")
@@ -162,6 +163,8 @@ proc quiz_reset() =
 
   quiz_data = newSeq[QuizData]()
   quiz_progress = 0
+
+  setTitle(detail, "")
 
 
 #################################################
@@ -311,7 +314,7 @@ proc event() =
     case now_state
     of stDifMenu:
       layout(stMainMenu)
-      
+
     of stSingleResult:
       layout(stQuiz, selected_genre_name, quiz_progress)
 
@@ -323,98 +326,117 @@ proc event() =
 
     case now_state
     of stMainMenu:
-      selected_genre = genre_list.getSelection() + 1
-      echo("SelectedGenre:" & $selected_genre)
-
-      selected_genre_name = genre_list.getText(genre_list.getSelection())
-      echo(selected_genre_name)
-
-      setTitle(detail, "問題数")
-
-      layout(stDifMenu)
-
-    of stDifMenu:
-      selected_difficulty = difficulty_list.getSelection() + 1
-      echo("SelectedDifficulty:" & $selected_difficulty)
-
-      selected_difficulty_name = difficulty_list.getText(difficulty_list.getSelection())
-      echo(selected_difficulty_name)
-
-      quiz_quantity = quiz_qtyspinctrl.getValue()
-      echo("Quiz_Quantity:" & $quiz_qtyspinctrl.getValue())
-
-      for quiz_row in get_quiz_data(selected_genre, selected_difficulty, quiz_quantity):
-        var
-          row_data: QuizData
-
-        row_data.title = quiz_row[1]
-        row_data.genre_name = quiz_row[2]
-        row_data.genre_option_count = parseInt(quiz_row[3])
-        row_data.difficulty_name = quiz_row[4]
-        row_data.question = quiz_row[5]
-        row_data.correct_option = quiz_row[6]
-
-        var
-          option_count: int = parseInt(quiz_row[3])
-          option_array: seq[string]
-
-        for i in countup(6, 6 + option_count - 1):
-          option_array.add(quiz_row[i])
-
-        shuffle(option_array)
-
-        for i in countup(6 + option_count, 6 + 4 - 1):
-          option_array.add("")
-
-        setTitle(option1, option_array[0])
-        setTitle(option2, option_array[1])
-        setTitle(option3, option_array[2])
-        setTitle(option4, option_array[3])
-        echo(option_array)
-
-        row_data.option_array = @[option_array[0], option_array[1], option_array[2], option_array[3]]
-        row_data.detail = quiz_row[10]
-        row_data.result = false
-        row_data.done = false
-
-        quiz_data.add(row_data)
-
-      echo(quiz_data)
-      
-      layout(stQuiz, selected_genre_name, quiz_progress)
-      quiz_progress = 0
-
-    of stQuiz:
-      layout(stSingleResult)
-
-      if quiz_data[quiz_progress].done == false:
-        quiz_data[quiz_progress].done = true
-        echo(quiz_data[quiz_progress].title & $quiz_data[quiz_progress].done)
-
-        if quiz_data[quiz_progress].correct_option == selected_option:
-          echo("correct")
-          setTitle(title, "正解！")
-          quiz_data[quiz_progress].result = true
-
-        else:
-          echo("incorrect")
-          setTitle(title, "不正解！")
-          quiz_data[quiz_progress].result = false
+      if genre_list.getSelection() < 0:
+        MessageDialog(panel, "クイズジャンルが選択されていません").display
         
       else:
-        if quiz_data[quiz_progress].result:
-          echo("correct")
-          setTitle(title, "正解！")
+        selected_genre = genre_list.getSelection() + 1
+        echo("SelectedGenre:" & $selected_genre)
+
+        selected_genre_name = genre_list.getText(genre_list.getSelection())
+        echo(selected_genre_name)
+
+        setTitle(detail, "問題数")
+
+        layout(stDifMenu)
+
+    of stDifMenu:
+      if difficulty_list.getSelection() < 0:
+        MessageDialog(panel, "難易度が選択されていません").display
+        
+      else:
+        selected_difficulty = difficulty_list.getSelection() + 1
+        echo("SelectedDifficulty:" & $selected_difficulty)
+
+        selected_difficulty_name = difficulty_list.getText(difficulty_list.getSelection())
+        echo(selected_difficulty_name)
+
+        quiz_quantity = quiz_qtyspinctrl.getValue()
+        echo("Quiz_Quantity:" & $quiz_qtyspinctrl.getValue())
+
+        for quiz_row in get_quiz_data(selected_genre, selected_difficulty, quiz_quantity):
+          var
+            row_data: QuizData
+
+          row_data.title = quiz_row[1]
+          row_data.genre_name = quiz_row[2]
+          row_data.genre_option_count = parseInt(quiz_row[3])
+          row_data.difficulty_name = quiz_row[4]
+          row_data.question = quiz_row[5]
+          row_data.correct_option = quiz_row[6]
+
+          var
+            option_count: int = parseInt(quiz_row[3])
+            option_array: seq[string]
+
+          for i in countup(6, 6 + option_count - 1):
+            option_array.add(quiz_row[i])
+
+          shuffle(option_array)
+
+          for i in countup(6 + option_count, 6 + 4 - 1):
+            option_array.add("")
+
+          setTitle(option1, option_array[0])
+          setTitle(option2, option_array[1])
+          setTitle(option3, option_array[2])
+          setTitle(option4, option_array[3])
+          echo(option_array)
+
+          row_data.option_array = @[option_array[0], option_array[1], option_array[2], option_array[3]]
+          row_data.detail = quiz_row[10]
+          row_data.result = false
+          row_data.done = false
+
+          quiz_data.add(row_data)
+
+        echo(quiz_data)
+        quiz_quantity = quiz_data.len
+
+        quiz_progress = 0
+        layout(stQuiz, selected_genre_name, quiz_progress)
+
+    of stQuiz:
+      if quiz_data[quiz_progress].done == false and selected_option == "":
+        MessageDialog(panel, "選択肢が選ばれていません").display
+      
+      else:
+        layout(stSingleResult)
+
+        if quiz_data[quiz_progress].done == false:
+          quiz_data[quiz_progress].done = true
+
+          echo("correct_option" & quiz_data[quiz_progress].correct_option)
+          echo("selected_option" & selected_option)
+
+          if quiz_data[quiz_progress].correct_option == selected_option:
+            echo("correct")
+            setTitle(title, "正解！")
+            quiz_data[quiz_progress].result = true
+
+          else:
+            echo("incorrect")
+            setTitle(title, "不正解！")
+            quiz_data[quiz_progress].result = false
 
         else:
-          echo("incorrect")
-          setTitle(title, "不正解！")
+          if quiz_data[quiz_progress].result:
+            echo("correct")
+            setTitle(title, "正解！")
+
+          else:
+            echo("incorrect")
+            setTitle(title, "不正解！")
 
     of stSingleResult:
-      if quiz_progress + 1 < quiz_quantity:
-        echo($(quiz_progress + 1) & " : " & $quiz_quantity)
+      selected_option = ""
+      quiz_progress = quiz_progress + 1
+
+      if quiz_progress < quiz_quantity:
+        echo($(quiz_progress) & " : " & $quiz_quantity)
         layout(stQuiz, selected_genre_name, quiz_progress)
-        quiz_progress = quiz_progress + 1
+
+        echo("quiz_progress:" & $quiz_progress)
       
       else:
         var
