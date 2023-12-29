@@ -5,6 +5,7 @@ type
     MenuState* = enum
       stMainMenu = "MainMenu"
       stSetting = "Setting"
+      stAddQuiz = "AddQuiz"
       stCredit = "Credit"
       stDifMenu = "DifMenu"
       stQuiz = "Quiz"

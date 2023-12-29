@@ -14,18 +14,52 @@ proc get_string*(menu: MenuState, quiz_kinds: string = ""): string =
         H:|-(10%)-[Genres(50%)]-[Options]-(10%)-|
         H:|-(10%)-[Fooder]-(10%)-|
         V:|-[Header(10%)]-[Genres,Options]-[Fooder(10%)]-|
-        
+
         H:[Header:[title]]
-        
+
         V:[Genres:[genre_list]]
-        V:[Options:[detail]-[graphic_setting(font_setting,sound_setting,credit,10%)]-[font_setting]-[sound_setting]-[credit]]
-        
+        V:[Options:[detail]-[setting(add_quiz,credit,10%)]-[add_quiz]-[credit]]
+
         H:[Fooder:~[next(20%)]]"""
 
   of "Setting":
     layout_string = layout_string & """
-        H:|-[title]-|
-        V:|-[title]-|"""
+        H:|-(10%)-[Header]-(10%)-|
+        H:|-(10%)-[Body]-(10%)-|
+        H:|-(10%)-[Fooder]-(10%)-|
+        V:|-[Header(10%)]-[Body]-[Fooder(10%)]-|
+
+        H:[Header:-[title(80%)]-]
+
+        H:[Body:[detail]]
+
+        H:[Fooder:[prev(20%)]~[next(20%)]]"""
+
+  of "AddQuiz":
+    layout_string = layout_string & """
+        H:|-(10%)-[Header]-(10%)-|
+        H:|-(10%)-[Body]-(10%)-|
+        H:|-(10%)-[Fooder]-(10%)-|
+        V:|-[Header(10%)]-[Body]-[Fooder(10%)]-|
+
+        H:[Header:-[title(80%)]-]
+
+        H:[Body:[detail]]
+
+        H:[Fooder:[prev(20%)]~[next(20%)]]"""
+
+  of "Credit":
+    layout_string = layout_string & """
+        H:|-(10%)-[Header]-(10%)-|
+        H:|-(10%)-[Body]-(10%)-|
+        H:|-(10%)-[Fooder]-(10%)-|
+        V:|-[Header(10%)]-[Body]-[Fooder(10%)]-|
+
+        H:[Header:-[title(80%)]-]
+
+        H:[Body:[detail]]
+
+        H:[Fooder:[prev(20%)]~[next(20%)]]"""
 
   of "DifMenu":
     layout_string = layout_string & """

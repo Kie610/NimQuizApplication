@@ -74,9 +74,8 @@ var
   difficulty_list: wListBox
   quiz_qtyspinctrl: wSpinCtrl
   detail: wTextCtrl
-  graphic_setting: wButton
-  font_setting: wButton
-  sound_setting: wButton
+  setting: wButton
+  add_quiz: wButton
   credit: wButton
 
   info: wStaticText
@@ -124,9 +123,8 @@ proc assignment() =
   quiz_qtyspinctrl = SpinCtrl(panel, value=10)
   quiz_qtyspinctrl.setRange(min=1, max=100)
   detail = TextCtrl(panel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
-  graphic_setting = Button(panel, label="Graphic")
-  font_setting = Button(panel, label="Font")
-  sound_setting = Button(panel, label="Sound")
+  setting = Button(panel, label="Setting")
+  add_quiz = Button(panel, label="Add Quiz")
   credit = Button(panel, label="Credit")
 
   info = StaticText(panel, label="1/1", style=(wAlignCenter + wAlignMiddle))
@@ -208,33 +206,36 @@ proc layout(state: MenuState, quiz_genre: string = "", quiz_number: int = -1) =
 
   of stSetting:
     panel.autolayout(screen_layout.get_string(stSetting))
-    
+
+  of stAddQuiz:
+    panel.autolayout(screen_layout.get_string(stAddQuiz))
+
   of stCredit:
     panel.autolayout(screen_layout.get_string(stCredit))
-    
+
   of stDifMenu:
     panel.autolayout(screen_layout.get_string(stDifMenu))
-    
+
   of stQuiz:
     case quiz_genre
     of "2択問題":
       panel.autolayout(screen_layout.get_string(stQuiz, "2択問題"))
-    
+
     of "3択問題":
       panel.autolayout(screen_layout.get_string(stQuiz, "3択問題"))
 
     of "4択問題":
       panel.autolayout(screen_layout.get_string(stQuiz, "4択問題"))
-    
+
   of stSingleResult:
     panel.autolayout(screen_layout.get_string(stSingleResult))
-    
+
   of stAllResult:
     panel.autolayout(screen_layout.get_string(stAllResult))
-    
+
   else:
     panel.autolayout(screen_layout.get_string(stDefault))
-    
+
   if state != now_state:
     showing()
 
@@ -308,6 +309,18 @@ proc event() =
     selected_option = getTitle(option4)
     echo("Selected Button No." & $selected_option)
 
+  setting.wEvent_Button do ():
+    echo("Setting")
+    layout(stSetting)
+
+  add_quiz.wEvent_Button do ():
+    echo("Add Quiz")
+    layout(stAddQuiz)
+
+  credit.wEvent_Button do ():
+    echo("Credit")
+    layout(stCredit)
+
   prev.wEvent_Button do ():
     echo("戻る")
 
@@ -317,6 +330,15 @@ proc event() =
 
     of stSingleResult:
       layout(stQuiz, selected_genre_name, quiz_progress)
+
+    of stSetting:
+      layout(stMainMenu)
+
+    of stAddQuiz:
+      layout(stMainMenu)
+
+    of stCredit:
+      layout(stMainMenu)
 
     else:
       echo("nothing")
@@ -450,13 +472,22 @@ proc event() =
 
           echo($correct_count & " / " & $quiz_quantity)
         
-        all_result = $correct_count & " / " & $quiz_quantity
+        all_result = $(correct_count/quiz_quantity*100) & "点"
 
         setTitle(title, all_result)
         layout(stAllResult)
 
 
     of stAllResult:
+      layout(stMainMenu)
+
+    of stSetting:
+      layout(stMainMenu)
+
+    of stAddQuiz:
+      layout(stMainMenu)
+
+    of stCredit:
       layout(stMainMenu)
 
 
