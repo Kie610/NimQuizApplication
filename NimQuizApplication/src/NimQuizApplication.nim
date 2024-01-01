@@ -67,7 +67,6 @@ var
   app: wApp
   frame: wFrame
   panel: wPanel
-  menubar: wMenuBar
 
   title: wStaticText
   genre_list: wListBox
@@ -115,7 +114,6 @@ proc assignment() =
   app = App(wSystemDpiAware)
   frame = Frame(title=Title, size=(1280, 720))
   panel = Panel(frame, style=wDoubleBuffered)
-  menubar = MenuBar(frame)
 
   title = StaticText(panel, label="MainMenu", style=(wAlignCenter + wAlignMiddle))
   genre_list = ListBox(panel, style=(wLbSingle))
@@ -268,6 +266,8 @@ proc set_quiz_data(quiz_number: int) =
   setTitle(option3, quiz_data[quiz_number].option_array[2])
   setTitle(option4, quiz_data[quiz_number].option_array[3])
   echo(quiz_data[quiz_number].option_array)
+
+  setTitle(info, $(quiz_number + 1) & "/" & $quiz_data.len)
 
   correct_answer = quiz_data[quiz_number].correct_option
 
