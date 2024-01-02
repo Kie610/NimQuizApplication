@@ -20,6 +20,7 @@ type
     state: MenuState
     prev_state: MenuState
     next_state: MenuState
+    menu_frame: wFrame
     menu_panel: wPanel
     title: string
     font_point: int

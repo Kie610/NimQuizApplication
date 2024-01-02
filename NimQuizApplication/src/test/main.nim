@@ -1,18 +1,20 @@
 import wNim
+import ../Modules/public_variables
 
 var
-  Title: string = "テスト"
   app: wApp = App(wSystemDpiAware)
-  frame {.global.}: wFrame
-  
-frame = Frame(title=Title, size=(1280, 720))
+  frame*: wFrame = Frame(title="テスト", size=(1280, 720))
+  panel*: wPanel = Panel(frame, style=wDoubleBuffered)
+  title*: wStaticText = StaticText(panel, label="TITLE", style=(wAlignCenter + wAlignMiddle))
 
-export app, frame
+export frame, panel, title
 
 import PageTemplate
 
 when isMainModule:
   PageTemplate.layout()
+  PageTemplate.event()
+
 
   frame.center()
   frame.show()

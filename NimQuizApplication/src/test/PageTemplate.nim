@@ -2,17 +2,16 @@ import wNim
 import ../Modules/public_variables
 import main
 
-
-var
-  panel: wPanel = Panel(main.frame, style=wDoubleBuffered)
-  title: wStaticText = StaticText(panel, label="TITLE", style=styleStaticText)
-
-const layout_string = "spacing:" & $layout_spacing & """
+const layout_string*: string = "spacing:" & $layout_spacing & """
         H:|-[title]-|
         V:|-[title]-|"""
 
 proc layout*() =
-  panel.autolayout(layout_string)
+  echo(getTitle(frame))
+  setTitle(frame, "doumo")
+  echo(getTitle(frame))
 
-#panel.wEvent_Size do ():
-#  layout()
+proc event*() =
+  panel.wEvent_Size do ():
+    echo("Size_Event")
+    #panel.autolayout(layout_string)
