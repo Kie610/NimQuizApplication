@@ -48,10 +48,6 @@ proc layout*(state: MenuState) =
 proc event*() =
   echo("event2")
 
-#  main_panel.wEvent_Size do ():
-#    echo("size2")
-#    layout(my_state)
-
   conPrev.wEvent_Button do ():
     echo("prev2")
     callMenu(prev_state)

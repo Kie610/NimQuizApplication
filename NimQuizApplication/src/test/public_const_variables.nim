@@ -39,6 +39,3 @@ var
 
   styleStaticText*: int = (wAlignCenter + wAlignMiddle)
   styleTextCtrl*: int = (wTeReadOnly + wTeMultiLine + wTeRich)
-
-const
-  layout_spacing*: int = 8
