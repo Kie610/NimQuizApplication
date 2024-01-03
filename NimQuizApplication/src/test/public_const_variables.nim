@@ -32,6 +32,11 @@ type
 #   グローバル変数宣言
 #################################################
 var
+  main_app*: wApp = App(wSystemDpiAware)
+  main_frame*: wFrame = Frame(title="テスト", size=(1280, 720))
+
+  now_state*: MenuState = stDefault
+
   styleStaticText*: int = (wAlignCenter + wAlignMiddle)
   styleTextCtrl*: int = (wTeReadOnly + wTeMultiLine + wTeRich)
 
