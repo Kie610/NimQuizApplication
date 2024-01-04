@@ -1,7 +1,7 @@
 import wNim
 
 #################################################
-#   構造体定義
+#   型定義
 #################################################
 type
     MenuState* {.byref.} = enum
@@ -16,18 +16,6 @@ type
       stDefault = "Default"
 
 type
-  MenuObject* {.byref.} = object
-    state : MenuState
-    prev_state : MenuState
-    next_state : MenuState
-    menu_frame : wFrame
-    menu_panel : wPanel
-    title : string
-    font_point : int
-    style : int
-    layout_string : string
-
-type
   GenreInfo* = tuple
     name : string
     detail : string
@@ -40,15 +28,33 @@ type
     detail : string
     difficulty : int
 
+type
+  QuizInfo* = tuple
+      ID : int
+      Title : string
+      Genre_Name : string
+      Genre_Option_Count : int
+      Difficulty_Name : string
+      Question : string
+      Option1 : string
+      Option2 : string
+      Option3 : string
+      Option4 : string
+      Detail : string
+
 
 #################################################
 #   グローバル変数宣言
 #################################################
 var
+  horizontal_line*: string = "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+
   main_app*: wApp = App(wSystemDpiAware)
   main_frame*: wFrame = Frame(title="テスト", size=(1280, 720))
 
   now_state*: MenuState = stDefault
 
+  stylePanel*: int = (wDoubleBuffered)
   styleStaticText*: int = (wAlignCenter + wAlignMiddle)
   styleTextCtrl*: int = (wTeReadOnly + wTeMultiLine + wTeRich)
+  styleListBox*: int = (wLbSingle)

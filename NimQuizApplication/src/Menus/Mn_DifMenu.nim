@@ -46,12 +46,12 @@ const layout_string: string = """
         H:[FOOTER:[conPrev(20%)]~[conNext(20%)]]"""
 
 proc layout*(state: MenuState): wPanel {.discardable.} =
-  echo($my_state & " layout\n------------------------------------")
+  echo($my_state & " layout" & horizontal_line)
 
   if my_state != now_state:
     now_state = my_state
 
-  echo(layout_string & "\n------------------------------------")
+  echo(layout_string & horizontal_line)
   main_frame.autolayout(layout_string)
   return conPanel
 

@@ -2,6 +2,8 @@
 #   ライブラリのインポート
 #################################################
 import db_connector/db_sqlite
+import public_variables
+import std/strutils
 
 
 #################################################
@@ -44,8 +46,10 @@ proc db_close*() =
 #################################################
 #   ジャンル関連情報取得
 #################################################
-proc get_genre_info*(): seq[seq[string]] =
-  var genre_table: seq[seq[string]]
+proc get_genre_info*(): seq[GenreInfo] =
+  var
+    genre_table: seq[seq[string]]
+    genre_list: seq[GenreInfo]
   
   genre_table = db.getAllRows(sql"""
     SELECT
@@ -57,17 +61,30 @@ proc get_genre_info*(): seq[seq[string]] =
     FROM
       M_GENRE_MASTER
     """)
+  
+  for row in genre_table:
+    var
+      genre_info: GenreInfo
 
-  # echo(genre_table)
+    genre_info.name = row[0]
+    genre_info.detail = row[1]
+    genre_info.genre = parseInt(row[2])
+    genre_info.genre_option_count = parseInt(row[3])
+    
+    genre_list.add(genre_info)
+  
+  echo(genre_list)
 
-  return genre_table
+  return genre_list
 
 
 #################################################
 #   難易度関連情報取得
 #################################################
-proc get_difficulty_info*(): seq[seq[string]] =
-  var difficulty_table: seq[seq[string]]
+proc get_difficulty_info*(): seq[DifficultyInfo] =
+  var
+    difficulty_table: seq[seq[string]]
+    difficulty_list: seq[DifficultyInfo]
   
   difficulty_table = db.getAllRows(sql"""
     SELECT
@@ -78,17 +95,28 @@ proc get_difficulty_info*(): seq[seq[string]] =
       M_DIFFICULTY_MASTER
     """)
 
-  # echo(difficulty_table)
+  for row in difficulty_table:
+    var
+      difficulty_info: DifficultyInfo
 
-  return difficulty_table
+    difficulty_info.name = row[0]
+    difficulty_info.detail = row[1]
+    difficulty_info.difficulty = parseInt(row[2])
 
+    difficulty_list.add(difficulty_info)
+
+  echo(difficulty_list)
+
+  return difficulty_list
 
 
 #################################################
 #   クイズ情報取得
 #################################################
-proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[seq[string]] =
-  var quiz_data: seq[seq[string]]
+proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[QuizInfo] =
+  var
+    quiz_data: seq[seq[string]]
+    quiz_list: seq[QuizInfo]
 
   var
     sql1: string
@@ -130,6 +158,24 @@ proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[seq[st
 
   quiz_data = db.getAllRows(sql(sql1 & $genre & sql2 & $difficulty & sql3 & $quiz_quantity))
 
-  echo(quiz_data)
-  
-  return quiz_data
+  for row in quiz_data:
+    var
+      quiz_info: QuizInfo
+
+    quiz_info.ID = parseInt(row[0])
+    quiz_info.Title = row[1]
+    quiz_info.Genre_Name = row[2]
+    quiz_info.Genre_Option_Count = parseInt(row[3])
+    quiz_info.Difficulty_Name = row[4]
+    quiz_info.Question = row[5]
+    quiz_info.Option1 = row[6]
+    quiz_info.Option2 = row[7]
+    quiz_info.Option3 = row[8]
+    quiz_info.Option4 = row[9]
+    quiz_info.Detail = row[10]
+
+    quiz_list.add(quiz_info)
+
+  echo($quiz_list)
+
+  return quiz_list

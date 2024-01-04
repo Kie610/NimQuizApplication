@@ -20,11 +20,11 @@ var
 proc init*() =
   echo($my_state & " init")
 
-  conPanel = Panel(main_frame, style=wDoubleBuffered)
-  conTitle = StaticText(conPanel, label="MainMenu", style=(wAlignCenter + wAlignMiddle))
+  conPanel = Panel(main_frame, style=stylePanel)
+  conTitle = StaticText(conPanel, label="MainMenu", style=styleStaticText)
 
-  conGenreList = ListBox(conPanel, style=(wLbSingle))
-  conDetail = TextCtrl(conPanel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
+  conGenreList = ListBox(conPanel, style=styleListBox)
+  conDetail = TextCtrl(conPanel, style=styleTextCtrl)
   conSetting = Button(conPanel, label="Setting")
   conAddQuiz = Button(conPanel, label="Add Quiz")
   conCredit = Button(conPanel, label="Credit")
@@ -46,12 +46,12 @@ const layout_string: string = """
         H:[FOOTER:~[conNext(20%)]]"""
 
 proc layout*(state: MenuState): wPanel {.discardable.} =
-  echo($my_state & " layout\n------------------------------------")
+  echo($my_state & " layout" & horizontal_line)
 
   if my_state != now_state:
     now_state = my_state
 
-  echo(layout_string & "\n------------------------------------")
+  echo(layout_string & horizontal_line)
   main_frame.autolayout(layout_string)
   return conPanel
 
