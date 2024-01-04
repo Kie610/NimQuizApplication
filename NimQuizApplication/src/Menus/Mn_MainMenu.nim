@@ -21,15 +21,21 @@ proc init*() =
   echo($my_state & " init")
 
   conPanel = Panel(main_frame, style=stylePanel)
-  conTitle = StaticText(conPanel, label="MainMenu", style=styleStaticText)
+  conTitle = StaticText(conPanel, style=styleStaticText)
 
   conGenreList = ListBox(conPanel, style=styleListBox)
   conDetail = TextCtrl(conPanel, style=styleTextCtrl)
-  conSetting = Button(conPanel, label="Setting")
-  conAddQuiz = Button(conPanel, label="Add Quiz")
-  conCredit = Button(conPanel, label="Credit")
+  conSetting = Button(conPanel)
+  conAddQuiz = Button(conPanel)
+  conCredit = Button(conPanel)
 
-  conNext = Button(conPanel, label="next")
+  conNext = Button(conPanel)
+
+  conTitle.setTitle("Main Menu")
+  conSetting.setTitle("Setting")
+  conAddQuiz.setTitle("Add Quiz")
+  conCredit.setTitle("Credit")
+  conNext.setTitle("Confirm")
 
 const layout_string: string = """
         HV:|[conPanel]|

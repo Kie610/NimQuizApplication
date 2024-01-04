@@ -14,8 +14,8 @@ var
 
 proc init*() =
   echo($my_state & " init")
-  conPanel = Panel(main_frame, style=wDoubleBuffered)
-  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=(wAlignCenter + wAlignMiddle))
+  conPanel = Panel(main_frame, style=stylePanel)
+  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=styleStaticText)
   conPrev = Button(conPanel, label=($my_state & " prev"))
   conNext = Button(conPanel, label=($my_state & " next"))
 

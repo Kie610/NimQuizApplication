@@ -19,13 +19,13 @@ var
 
 proc init*() =
   echo($my_state & " init")
-  conPanel = Panel(main_frame, style=wDoubleBuffered)
-  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=(wAlignCenter + wAlignMiddle))
+  conPanel = Panel(main_frame, style=stylePanel)
+  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=styleStaticText)
 
-  conDetail = TextCtrl(conPanel, style=(wTeReadOnly + wTeMultiLine + wTeRich))
+  conDetail = TextCtrl(conPanel, style=styleTextCtrl)
   conQtyCtrl = SpinCtrl(conPanel, value=10)
   conQtyCtrl.setRange(min=1, max=100)
-  conDifficultyList = ListBox(conPanel, style=(wLbSingle))
+  conDifficultyList = ListBox(conPanel, style=styleListBox)
 
   conPrev = Button(conPanel, label=($my_state & " prev"))
   conNext = Button(conPanel, label=($my_state & " next"))

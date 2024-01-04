@@ -9,14 +9,12 @@ const next_state*: MenuState = stMainMenu
 var
   conPanel*: wPanel
   conTitle*: wStaticText
-  conPrev*: wButton
   conNext*: wButton
 
 proc init*() =
   echo($my_state & " init")
-  conPanel = Panel(main_frame, style=wDoubleBuffered)
-  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=(wAlignCenter + wAlignMiddle))
-  conPrev = Button(conPanel, label=($my_state & " prev"))
+  conPanel = Panel(main_frame, style=stylePanel)
+  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=styleStaticText)
   conNext = Button(conPanel, label=($my_state & " next"))
 
 const layout_string: string = """
@@ -24,7 +22,7 @@ const layout_string: string = """
         H:|-[conTitle,BOTTOM]-|
         V:|-[conTitle]-[BOTTOM(20%)]-|
         
-        H:[BOTTOM:[conPrev(conNext,30%)]~[conNext]]"""
+        H:[BOTTOM:~[conNext(30%)]]"""
 
 proc layout*(state: MenuState): wPanel {.discardable.} =
   echo($my_state & " layout" & horizontal_line)
@@ -38,10 +36,6 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
 
 proc event*() =
   echo($my_state & " event load")
-
-  conPrev.wEvent_Button do ():
-    echo($my_state & " prev")
-    callMenu(prev_state)
 
   conNext.wEvent_Button do ():
     echo($my_state & " next")
