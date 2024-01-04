@@ -28,14 +28,14 @@ type
     layout_string : string
 
 type
-  GenreInfo* = object
+  GenreInfo* = tuple
     name : string
     detail : string
     genre : int
     genre_option_count : int
 
 type
-  DifficultyInfo* = object
+  DifficultyInfo* = tuple
     name : string
     detail : string
     difficulty : int

@@ -58,7 +58,7 @@ proc get_genre_info*(): seq[seq[string]] =
       M_GENRE_MASTER
     """)
 
-  echo(genre_table)
+  # echo(genre_table)
 
   return genre_table
 
@@ -78,7 +78,7 @@ proc get_difficulty_info*(): seq[seq[string]] =
       M_DIFFICULTY_MASTER
     """)
 
-  echo(difficulty_table)
+  # echo(difficulty_table)
 
   return difficulty_table
 

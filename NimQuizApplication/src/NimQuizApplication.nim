@@ -2,6 +2,7 @@
 #   モジュールのインポート
 #################################################
 import wNim
+import strutils
 import Modules/[public_variables, DB_Connection, Sound]
 
 #################################################
@@ -12,9 +13,9 @@ const i_icon = staticRead(r"images/wNim.ico")
 #const i_cancel = staticRead(r"images/cancel.ico")
 main_frame.icon = Icon(i_icon)
 
-# var
-#   genre_list: seq[GenreInfo]
-#   difficulty_list: seq[DifficultyInfo]
+var
+  genre_list: seq[GenreInfo]
+  difficulty_list: seq[DifficultyInfo]
 
 #################################################
 #   プロシージャ前方宣言
@@ -52,30 +53,30 @@ when isMainModule:
 #################################################
 proc init() =
   echo("main_module_init")
-  # for row in get_genre_info():
-  #   var
-  #     genre_info: GenreInfo = GenreInfo()
+  for row in get_genre_info():
+    var
+      genre_info: GenreInfo
 
-  #   genre_info.name = row[0]
-  #   genre_info.detail = row[1]
-  #   genre_info.genre = parseInt(row[2])
-  #   genre_info.genre_option_count = parseInt(row[3])
+    genre_info.name = row[0]
+    genre_info.detail = row[1]
+    genre_info.genre = parseInt(row[2])
+    genre_info.genre_option_count = parseInt(row[3])
     
-  #   genre_list.append(genre_info)
+    genre_list.add(genre_info)
   
-  # echo(genre_list)
+  echo($genre_list)
 
-  # for row in get_difficulty_info:
-  #   var
-  #     difficulty_info: DifficultyInfo = DifficultyInfo()
+  for row in get_difficulty_info():
+    var
+      difficulty_info: DifficultyInfo
 
-  #   difficulty_info.name = row[0]
-  #   difficulty_info.detail = row[1]
-  #   difficulty_info.difficulty = parseInt(row[2])
+    difficulty_info.name = row[0]
+    difficulty_info.detail = row[1]
+    difficulty_info.difficulty = parseInt(row[2])
 
-  #   difficulty_list.append(difficulty_info)
+    difficulty_list.add(difficulty_info)
 
-  # echo(difficulty_list)
+  echo($difficulty_list)
 
 #################################################
 #   サイズイベント
