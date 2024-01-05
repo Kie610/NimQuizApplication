@@ -34,6 +34,7 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
 
   echo(layout_string & horizontal_line)
   main_frame.autolayout(layout_string)
+  
   return conPanel
 
 proc event*() =

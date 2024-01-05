@@ -23,9 +23,9 @@ var
 proc init*() =
   echo($my_state & " init")
   conPanel = Panel(main_frame, style=stylePanel)
-  conTitle = StaticText(conPanel, label=($my_state & " TITLE"), style=styleStaticText)
+  conTitle = StaticText(conPanel, style=styleStaticText)
 
-  conInfo = StaticText(conPanel, label="1/1", style=styleStaticText)
+  conInfo = StaticText(conPanel, style=styleStaticText)
   conGenre = StaticText(conPanel, style=styleStaticText)
   conQuestion = TextCtrl(conPanel, style=styleTextCtrl)
   conOption1 = Button(conPanel)
@@ -33,7 +33,21 @@ proc init*() =
   conOption3 = Button(conPanel)
   conOption4 = Button(conPanel)
 
-  conNext = Button(conPanel, label=($my_state & " next"))
+  conNext = Button(conPanel)
+
+  conNext.setTitle("決定")
+
+proc set_info() =
+  conTitle.setTitle(quiz_list[quiz_progress].Title)
+  conInfo.setTitle($(quiz_progress + 1) & " / " & $quiz_qty)
+  conGenre.setTitle(quiz_list[quiz_progress].Genre_Name)
+
+  conQuestion.setTitle(quiz_list[quiz_progress].Question)
+
+  conOption1.setTitle(quiz_list[quiz_progress].Option1)
+  conOption2.setTitle(quiz_list[quiz_progress].Option2)
+  conOption3.setTitle(quiz_list[quiz_progress].Option3)
+  conOption4.setTitle(quiz_list[quiz_progress].Option4)
 
 const layout_string: string = """
         HV:|[conPanel]|
@@ -56,6 +70,7 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
   echo($my_state & " layout" & horizontal_line)
 
   if my_state != now_state:
+    set_info()
     now_state = my_state
 
   echo(layout_string & horizontal_line)
@@ -65,6 +80,27 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
 proc event*() =
   echo($my_state & " event load")
 
+  conOption1.wEvent_Button do ():
+    echo(conOption1.getTitle() & " Selected")
+    selected_option = conOption1.getTitle()
+
+  conOption2.wEvent_Button do ():
+    echo(conOption2.getTitle() & " Selected")
+    selected_option = conOption2.getTitle()
+
+  conOption3.wEvent_Button do ():
+    echo(conOption3.getTitle() & " Selected")
+    selected_option = conOption3.getTitle()
+
+  conOption4.wEvent_Button do ():
+    echo(conOption4.getTitle() & " Selected")
+    selected_option = conOption4.getTitle()
+
   conNext.wEvent_Button do ():
     echo($my_state & " next")
+    echo("Done: " & $quiz_list[quiz_progress].Done)
+
+    if quiz_list[quiz_progress].Done == false:
+      quiz_result_set()
+
     callMenu(next_state)

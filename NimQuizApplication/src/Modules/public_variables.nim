@@ -36,11 +36,14 @@ type
       Genre_Option_Count : int
       Difficulty_Name : string
       Question : string
+      Correct_Option : string 
       Option1 : string
       Option2 : string
       Option3 : string
       Option4 : string
       Detail : string
+      Done : bool
+      Result : bool
 
 
 #################################################
@@ -52,7 +55,16 @@ var
   main_app*: wApp = App(wSystemDpiAware)
   main_frame*: wFrame = Frame(title="テスト", size=(1280, 720))
 
+  genre_list*: seq[GenreInfo]
+  difficulty_list*: seq[DifficultyInfo]
+  quiz_list*: seq[QuizInfo]
+
   now_state*: MenuState = stDefault
+  selected_genre*: int
+  selected_difficulty*: int
+  quiz_qty*: int
+  quiz_progress*: int
+  selected_option*: string
 
   stylePanel*: int = (wDoubleBuffered)
   styleStaticText*: int = (wAlignCenter + wAlignMiddle)

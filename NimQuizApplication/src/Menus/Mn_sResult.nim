@@ -30,6 +30,7 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
   echo($my_state & " layout" & horizontal_line)
 
   if my_state != now_state:
+    conTitle.setTitle(quiz_list[quiz_progress].Detail)
     now_state = my_state
 
   echo(layout_string & horizontal_line)
@@ -45,4 +46,11 @@ proc event*() =
 
   conNext.wEvent_Button do ():
     echo($my_state & " next")
-    callMenu(next_state)
+
+    quiz_progress = quiz_progress + 1
+
+    if quiz_progress < quiz_qty:
+      callMenu(prev_state)
+
+    else:
+      callMenu(next_state)

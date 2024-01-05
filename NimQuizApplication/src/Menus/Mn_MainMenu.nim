@@ -37,6 +37,10 @@ proc init*() =
   conCredit.setTitle("Credit")
   conNext.setTitle("Confirm")
 
+proc set_info*() =
+  for genre in genre_list:
+    conGenreList.append(genre.name)
+
 const layout_string: string = """
         HV:|[conPanel]|
         H:|-(10%)-[HEADER]-(10%)-|
@@ -55,6 +59,9 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
   echo($my_state & " layout" & horizontal_line)
 
   if my_state != now_state:
+    quiz_reset()
+    conGenreList.deselect()
+    conDetail.setTitle("")
     now_state = my_state
 
   echo(layout_string & horizontal_line)
@@ -63,6 +70,13 @@ proc layout*(state: MenuState): wPanel {.discardable.} =
 
 proc event*() =
   echo($my_state & " event load")
+
+  conGenreList.wEvent_ListBox do ():
+    selected_genre = conGenreList.getSelection()
+
+    if selected_genre >= 0:
+      conDetail.setTitle(genre_list[selected_genre].detail)
+      echo("選択ジャンル : " & $selected_genre & "番 : " & genre_list[selected_genre].name)
 
   conSetting.wEvent_Button do ():
     echo($my_state & " SettingButton")
@@ -78,4 +92,12 @@ proc event*() =
 
   conNext.wEvent_Button do ():
     echo($my_state & " nextButton")
-    callMenu(next_state)
+
+    if selected_genre < 0:
+      MessageDialog(conPanel, "選択肢が選ばれていません").display
+      
+    else:
+      echo(horizontal_line)
+      echo("選択ジャンル : " & $selected_genre & "番 : " & genre_list[selected_genre].name)
+      echo(horizontal_line)
+      callMenu(next_state)

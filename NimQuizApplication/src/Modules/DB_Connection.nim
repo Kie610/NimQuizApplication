@@ -3,7 +3,7 @@
 #################################################
 import db_connector/db_sqlite
 import public_variables
-import std/strutils
+import std/[strutils, random]
 
 
 #################################################
@@ -114,6 +114,7 @@ proc get_difficulty_info*(): seq[DifficultyInfo] =
 #   クイズ情報取得
 #################################################
 proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[QuizInfo] =
+  randomize()
   var
     quiz_data: seq[seq[string]]
     quiz_list: seq[QuizInfo]
@@ -161,6 +162,8 @@ proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[QuizIn
   for row in quiz_data:
     var
       quiz_info: QuizInfo
+      option_start: int = 6
+      option_seq: seq[string]
 
     quiz_info.ID = parseInt(row[0])
     quiz_info.Title = row[1]
@@ -168,11 +171,25 @@ proc get_quiz_data*(genre: int, difficulty: int, quiz_quantity: int): seq[QuizIn
     quiz_info.Genre_Option_Count = parseInt(row[3])
     quiz_info.Difficulty_Name = row[4]
     quiz_info.Question = row[5]
-    quiz_info.Option1 = row[6]
-    quiz_info.Option2 = row[7]
-    quiz_info.Option3 = row[8]
-    quiz_info.Option4 = row[9]
+    quiz_info.Correct_Option = row[6]
+
+    for i in countup(option_start, option_start + 4 - 1):
+      option_seq.add(row[i])
+      
+      if i == option_start + quiz_info.Genre_Option_Count - 1:
+        echo("shuffle")
+        shuffle(option_seq)
+
+      echo(option_seq)
+
+    quiz_info.Option1 = option_seq[0]
+    quiz_info.Option2 = option_seq[1]
+    quiz_info.Option3 = option_seq[2]
+    quiz_info.Option4 = option_seq[3]
+
     quiz_info.Detail = row[10]
+    quiz_info.Done = false
+    quiz_info.Result = false
 
     quiz_list.add(quiz_info)
 

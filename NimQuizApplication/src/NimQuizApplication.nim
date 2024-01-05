@@ -12,16 +12,15 @@ const i_icon = staticRead(r"images/wNim.ico")
 #const i_cancel = staticRead(r"images/cancel.ico")
 main_frame.icon = Icon(i_icon)
 
-var
-  genre_list: seq[GenreInfo]
-  difficulty_list: seq[DifficultyInfo]
-
 #################################################
 #   プロシージャ前方宣言
 #################################################
 proc init()
+proc quiz_reset*()
+proc quiz_get*()
+proc quiz_result_set*()
 proc initMenu()
-proc callMenu*(state: MenuState, change: bool = true, quiz_genre_name: string = "2択問題")
+proc callMenu*(state: MenuState, change: bool = true)
 proc size_event()
 proc window_open()
 proc window_close()
@@ -35,6 +34,7 @@ when isMainModule:
     Sound.enable_sound()
 
     init()
+    quiz_reset()
     initMenu()
     callMenu(stMainMenu)
     size_event()
@@ -54,11 +54,41 @@ proc init() =
   echo("main_module_init")
 
   genre_list = get_genre_info()
-
   difficulty_list = get_difficulty_info()
+  
+#################################################
+#   クイズ関連情報初期化
+#################################################
+proc quiz_reset*() =
+  echo("quiz_reset")
 
-  echo(get_quiz_data(2, 2, 10))
+  selected_genre = -1
+  selected_difficulty = -1
+  quiz_qty = -1
+  quiz_progress = 0
+  selected_option = ""
 
+#################################################
+#   クイズ関連情報取得
+#################################################
+proc quiz_get*() =
+  echo("quiz_get")
+
+  quiz_list = get_quiz_data(selected_genre + 1, selected_difficulty + 1, quizqty)
+
+#################################################
+#   クイズ結果格納
+#################################################
+proc quiz_result_set*() =
+  echo("quiz_get")
+  echo("Selected: " & $selected_option)
+  echo("Correct: " & $quiz_list[quiz_progress].Correct_Option)
+
+  if selected_option == quiz_list[quiz_progress].Correct_Option:
+    echo("CORRECT")
+    quiz_list[quiz_progress].Result = true
+
+  quiz_list[quiz_progress].Done = true
 
 #################################################
 #   サイズイベント
@@ -106,6 +136,7 @@ import Menus/Quiz/[
 proc initMenu() =
   Mn_MainMenu.init()
   Mn_MainMenu.event()
+  Mn_MainMenu.set_info()
 
   Mn_Setting.init()
   Mn_Setting.event()
@@ -124,6 +155,7 @@ proc initMenu() =
 
   Mn_DifMenu.init()
   Mn_DifMenu.event()
+  Mn_DifMenu.set_info()
 
   Mn_Default.init()
   Mn_Default.event()
@@ -141,7 +173,7 @@ proc initMenu() =
 #################################################
 #   メニューモジュール呼び出し
 #################################################
-proc callMenu*(state: MenuState, change: bool = true, quiz_genre_name: string = "2択問題") =
+proc callMenu*(state: MenuState, change: bool = true) =
   var show_panel: wPanel
 
   echo("Cought State: " & $state)
@@ -170,8 +202,9 @@ proc callMenu*(state: MenuState, change: bool = true, quiz_genre_name: string = 
 
 
   of stQuiz:
+    var genre_name: string = genre_list[selected_genre].name
 
-    case quiz_genre_name:
+    case genre_name:
     of "2択問題":
       show_panel = Mn_Quiz2Choice.layout(state)
 
@@ -196,5 +229,9 @@ proc callMenu*(state: MenuState, change: bool = true, quiz_genre_name: string = 
     for p in main_frame.children:
       if p != show_panel:
         hide(p)
+  
+  var panel_size: wSize = show_panel.getSize()
+  for child in show_panel.getChildren():
+    child.setFont(Font((panel_size.height + panel_size.width) / 150))
 
   echo("now_state: " & $now_state & "\n")
