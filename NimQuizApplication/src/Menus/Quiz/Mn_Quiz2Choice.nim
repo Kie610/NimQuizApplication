@@ -41,6 +41,8 @@ proc set_info() =
   conOption1.setTitle(quiz_list[quiz_progress].Option1)
   conOption2.setTitle(quiz_list[quiz_progress].Option2)
 
+  selected_option = ""
+
 const layout_string: string = """
         HV:|[conPanel]|
         H:|-(10%)-[HEADER]-(10%)-|
@@ -80,9 +82,12 @@ proc event*() =
 
   conNext.wEvent_Button do ():
     echo($my_state & " next")
-    echo("Done: " & $quiz_list[quiz_progress].Done)
 
-    if quiz_list[quiz_progress].Done == false:
-      quiz_result_set()
+    if selected_option == "":
+      MessageDialog(conPanel, "回答が選ばれていません").display
 
-    callMenu(next_state)
+    else:
+      if quiz_list[quiz_progress].Done == false:
+        quiz_result_set()
+  
+      callMenu(next_state)
