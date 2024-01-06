@@ -18,20 +18,23 @@ var
   app_config*: AppConfig
 
   dirHome*: Path
-  pathConfigFile*: Path
-
   pathImagesFolder*: Path
+
   pathDataFolder*: Path
+  pathDataBaseFile*: Path
+
+  pathConfigFile*: Path
 
 dirHome = getCurrentDir()
 echo("Current Path")
 echo(string(dirHome))
 
+pathImagesFolder = Path("Images/")
+
+pathDataFolder = Path("Data/")
+pathDataBaseFile = pathDataFolder/Path("QUIZ_DATABASE.db")
+
 pathConfigFile = Path("config.ini")
-
-pathImagesFolder = Path("Images")
-pathDataFolder = Path("Data")
-
 echo("Config File Exist: " & $fileExists(pathConfigFile))
 
 proc ConfigLoading*() =

@@ -1,6 +1,8 @@
 #################################################
 #   ライブラリのインポート
 #################################################
+import ../NimQuizApplication
+
 import db_connector/db_sqlite
 import public_variables
 import std/[strutils, random]
@@ -17,7 +19,7 @@ var db: DbConn
 #################################################
 proc db_open*() =
   echo("Open DB")
-  db = open("Data/QUIZ_DATABASE.db", "", "", "")
+  db = open(string(pathDataBaseFile), "", "", "")
 
   db.exec(sql"""CREATE TABLE IF NOT EXISTS T_QUIZ_TABLE (
       ID      INTEGER PRIMARY KEY AUTOINCREMENT
