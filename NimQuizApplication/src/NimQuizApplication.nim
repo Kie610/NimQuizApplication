@@ -2,15 +2,15 @@
 #   モジュールのインポート
 #################################################
 import wNim
+include Modules/[Images_Process, Config_File_Load]
 import Modules/[public_variables, DB_Connection, Sound]
+
 
 #################################################
 #   変数宣言
 #################################################
-const i_icon = staticRead(r"images/wNim.ico")
-#const i_ok = staticRead(r"images/ok.ico")
-#const i_cancel = staticRead(r"images/cancel.ico")
-main_frame.icon = Icon(i_icon)
+main_frame.icon = icoIcon
+
 
 #################################################
 #   プロシージャ前方宣言
@@ -30,6 +30,7 @@ proc window_close()
 #################################################
 when isMainModule:
   try:
+    ConfigLoading()
     DB_Connection.db_open()
     Sound.enable_sound()
 
@@ -42,6 +43,7 @@ when isMainModule:
     window_open()
 
   finally:
+    ConfigSaving()
     DB_Connection.db_close()
     Sound.disable_sound()
 
@@ -52,6 +54,8 @@ when isMainModule:
 #################################################
 proc init() =
   echo("main_module_init")
+
+  main_frame.setMinSize(1280,720)
 
   genre_list = get_genre_info()
   difficulty_list = get_difficulty_info()

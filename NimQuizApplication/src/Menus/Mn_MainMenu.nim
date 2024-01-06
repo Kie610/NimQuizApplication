@@ -17,6 +17,8 @@ var
 
   conNext*: wButton
 
+  conBackground*: wStaticBitmap
+
 proc init*() =
   echo($my_state & " init")
 
@@ -37,12 +39,15 @@ proc init*() =
   conCredit.setTitle("Credit")
   conNext.setTitle("Confirm")
 
+  conBackground = StaticBitmap(conPanel, bitmap=Bitmap(imgBackground), style=styleStaticBitmap)
+
 proc set_info*() =
   for genre in genre_list:
     conGenreList.append(genre.name)
 
 const layout_string: string = """
         HV:|[conPanel]|
+        HV:|[conBackground]|
         H:|-(10%)-[HEADER]-(10%)-|
         H:|-(10%)-[GENRES(50%)]-[OPTIONS]-(10%)-|
         H:|-(10%)-[FOOTER]-(10%)-|

@@ -70,3 +70,4 @@ var
   styleStaticText*: int = (wAlignCenter + wAlignMiddle)
   styleTextCtrl*: int = (wTeReadOnly + wTeMultiLine + wTeRich)
   styleListBox*: int = (wLbSingle)
+  styleStaticBitmap*: int = (wSbAuto)
