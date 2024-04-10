@@ -47,7 +47,7 @@ proc set_info*() =
 
 const layout_string: string = """
         HV:|[conPanel]|
-        HV:|[conBackground]|
+        HV:|~[conBackground]~|
         H:|-(10%)-[HEADER]-(10%)-|
         H:|-(10%)-[GENRES(50%)]-[OPTIONS]-(10%)-|
         H:|-(10%)-[FOOTER]-(10%)-|

@@ -66,7 +66,7 @@ var
   quiz_progress*: int
   selected_option*: string
 
-  stylePanel*: int = (wDoubleBuffered)
+  stylePanel*: int = (wDoubleBuffered + wTransparentWindow)
   styleStaticText*: int = (wAlignCenter + wAlignMiddle)
   styleTextCtrl*: int = (wTeReadOnly + wTeMultiLine + wTeRich)
   styleListBox*: int = (wLbSingle)
