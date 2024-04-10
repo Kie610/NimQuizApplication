@@ -1,7 +1,7 @@
 # Package 
 version       = "0.0.1" 
 author        = "kie" 
-description   = "This is a NimQuizApplication" 
+description   = "This is a NimQuizApplication using Neel" 
 license       = "MIT" 
 srcDir        = "src" 
 bin           = @["NimQuizApplication"] 
